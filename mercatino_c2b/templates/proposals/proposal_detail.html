@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}{{ proposal.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ proposal.title }}</h1>
+
+    <p>
+        Stato:
+        <span class="badge">{{ proposal.get_status_display }}</span>
+    </p>
+
+    <p>{{ proposal.description }}</p>
+
+    {% if proposal.requested_price %}
+        <p>Prezzo richiesto: € {{ proposal.requested_price }}</p>
+    {% endif %}
+
+    {% if proposal.admin_offer %}
+        <p><strong>Offerta ricevuta:</strong> € {{ proposal.admin_offer }}</p>
+    {% endif %}
+
+    {% if proposal.images.all %}
+        <h3>Foto</h3>
+        {% for image in proposal.images.all %}
+            <img class="image-preview" src="{{ image.image.url }}" alt="">
+        {% endfor %}
+    {% endif %}
+    {% if proposal.admin_offer and proposal.status == "offer_sent" %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="accept_offer">
+            <button class="button" type="submit">Accetta offerta</button>
+        </form>
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Messaggi</h2>
+
+    {% for message in proposal.messages.all %}
+        <div>
+            <strong>{{ message.sender.username }}</strong>
+            <small>{{ message.created_at }}</small>
+            <p>{{ message.body }}</p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>Non ci sono ancora messaggi.</p>
+    {% endfor %}
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="send_message">
+        {{ message_form.as_p }}
+
+        <button class="button" type="submit">Invia messaggio</button>
+    </form>
+</div>
+
+{% if proposal.can_user_send_vinted_link %}
+    <div class="card">
+        <h2>Invia link Vinted</h2>
+        <p>
+            Crea l'annuncio privato su Vinted e incolla qui il link.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="send_vinted_link">
+            {{ vinted_form.as_p }}
+
+            <button class="button" type="submit">Invia link</button>
+        </form>
+    </div>
+{% endif %}
+
+{% if proposal.vinted_url %}
+    <div class="card">
+        <h2>Link Vinted inviato</h2>
+        <p>
+            <a href="{{ proposal.vinted_url }}" target="_blank">
+                Apri annuncio Vinted
+            </a>
+        </p>
+    </div>
+{% endif %}
+{% endblock %}

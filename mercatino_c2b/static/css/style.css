@@ -1,0 +1,107 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f7f7f7;
+    color: #222;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.site-header {
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+}
+
+.header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 22px;
+    text-decoration: none;
+    color: #222;
+}
+
+nav a {
+    margin-left: 16px;
+    text-decoration: none;
+    color: #222;
+}
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.button {
+    display: inline-block;
+    background: #222;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.button.secondary {
+    background: #666;
+}
+
+form p {
+    margin-bottom: 16px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    background: #e9f7ef;
+    border: 1px solid #b7e1c1;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 999px;
+    font-size: 13px;
+    background: #eee;
+}
+
+.proposal-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.image-preview {
+    max-width: 160px;
+    border-radius: 8px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
