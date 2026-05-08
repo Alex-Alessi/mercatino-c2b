@@ -52,9 +52,6 @@ def proposal_create_view(request):
 @login_required
 def proposal_detail_view(request, pk):
     proposal = get_object_or_404(ItemProposal, pk=pk, user=request.user)
-    if proposal.status == ItemProposal.Status.OFFER_SENT and proposal.admin_offer and not proposal.offer_seen_by_user:
-        proposal.offer_seen_by_user = True
-        proposal.save(update_fields=["offer_seen_by_user"])
         
     message_form = ProposalMessageForm()
     vinted_form = VintedLinkForm(instance=proposal)
@@ -101,7 +98,11 @@ def proposal_detail_view(request, pk):
 
             messages.success(request, "Offerta accettata. Ora puoi inserire il link dell'annuncio.")
             return redirect("proposal_detail", pk=proposal.pk)
-
+    else:
+        if proposal.status == ItemProposal.Status.OFFER_SENT and proposal.admin_offer and not proposal.offer_seen_by_user:
+            proposal.offer_seen_by_user = True
+            proposal.save(update_fields=["offer_seen_by_user"])
+            
     return render(
         request,
         "proposals/proposal_detail.html",

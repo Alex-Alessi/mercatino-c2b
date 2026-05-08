@@ -29,7 +29,6 @@ class ItemProposalAdmin(admin.ModelAdmin):
     inlines = [ProposalImageInline, ProposalMessageInline]
     actions = [
         "mark_as_negotiation",
-        "mark_as_offer_accepted",
         "mark_as_rejected",
         "mark_as_completed",
     ]
@@ -39,6 +38,7 @@ class ItemProposalAdmin(admin.ModelAdmin):
         "description",
         "requested_price",
         "vinted_url",
+        "status",
         "created_at",
         "updated_at",
     ]
@@ -47,10 +47,6 @@ class ItemProposalAdmin(admin.ModelAdmin):
     def mark_as_negotiation(self, request, queryset):
         queryset.update(status=ItemProposal.Status.NEGOTIATION)
 
-    @admin.action(description="Segna offerta accettata")
-    def mark_as_offer_accepted(self, request, queryset):
-        queryset.update(status=ItemProposal.Status.OFFER_ACCEPTED)
-
     @admin.action(description="Rifiuta")
     def mark_as_rejected(self, request, queryset):
         queryset.update(status=ItemProposal.Status.REJECTED)
@@ -58,6 +54,35 @@ class ItemProposalAdmin(admin.ModelAdmin):
     @admin.action(description="Segna completato")
     def mark_as_completed(self, request, queryset):
         queryset.update(status=ItemProposal.Status.COMPLETED)
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            old_obj = ItemProposal.objects.get(pk=obj.pk)
+            offer_changed = old_obj.admin_offer != obj.admin_offer
+        else:
+            offer_changed = bool(obj.admin_offer)
+        
+        if offer_changed and obj.admin_offer:
+            if obj.status not in [
+                ItemProposal.Status.COMPLETED,
+                ItemProposal.Status.VINTED_LINK_SENT,
+                ItemProposal.Status.OFFER_ACCEPTED,
+            ]:
+                obj.status = ItemProposal.Status.OFFER_SENT
+                obj.offer_seen_by_user = False
+        super().save_model(request, obj, form, change)
+    
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj))
+
+        if obj and obj.status in [
+            ItemProposal.Status.OFFER_ACCEPTED,
+            ItemProposal.Status.VINTED_LINK_SENT,
+            ItemProposal.Status.COMPLETED,
+        ]:
+            readonly.append("admin_offer")
+        
+        return readonly
 
 
 @admin.register(ProposalImage)
