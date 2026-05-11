@@ -6,6 +6,11 @@ from .models import ItemProposal, ProposalImage, ProposalMessage
 class ProposalImageInline(admin.TabularInline):
     model = ProposalImage
     extra = 0
+    readonly_fields = ["image"]
+    can_delete = False
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 class ProposalMessageInline(admin.TabularInline):

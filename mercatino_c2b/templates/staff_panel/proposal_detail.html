@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}{{ proposal.title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ proposal.title }}</h1>
+
+    <p>
+        Stato:
+        <span class="badge">{{ proposal.get_status_display }}</span>
+    </p>
+
+    <p>{{ proposal.description }}</p>
+
+    {% if proposal.requested_price %}
+        <p>Prezzo richiesto: € {{ proposal.requested_price }}</p>
+    {% endif %}
+
+    {% if proposal.admin_offer %}
+        <p><strong>Offerta ricevuta:</strong> € {{ proposal.admin_offer }}</p>
+    {% endif %}
+
+    {% if proposal.images.all %}
+        <h3>Foto</h3>
+        {% for image in proposal.images.all %}
+            <img class="image-preview" src="{{ image.image.url }}" alt="">
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Messaggi</h2>
+
+    {% for message in proposal.messages.all %}
+        <div>
+            <strong>{{ message.sender.username }}</strong>
+            <small>{{ message.created_at }}</small>
+            <p>{{ message.body }}</p>
+        </div>
+        <hr>
+    {% empty %}
+        <p>Non ci sono ancora messaggi.</p>
+    {% endfor %}
+
+</div>
+
+{% if proposal.vinted_url %}
+    <div class="card">
+        <h2>Link Vinted inviato</h2>
+        <p>
+            <a href="{{ proposal.vinted_url }}" target="_blank">
+                Apri annuncio Vinted
+            </a>
+        </p>
+    </div>
+{% endif %}
+{% endblock %}
