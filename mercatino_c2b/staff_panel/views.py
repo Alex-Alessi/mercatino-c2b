@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from proposals.models import ItemProposal
 from proposals.forms import ProposalMessageForm
 from django.contrib import messages
+from .forms import AdminOfferForm
 
 # Create your views here.
 @login_required
@@ -19,6 +20,7 @@ def staff_proposal_list_view(request):
 def staff_proposal_detail_view(request, pk):
     proposal = get_object_or_404(ItemProposal, pk=pk)
     message_form = ProposalMessageForm()
+    offer_form = AdminOfferForm()
 
     if request.method == "POST":
         action = request.POST.get("action")
@@ -38,5 +40,6 @@ def staff_proposal_detail_view(request, pk):
     return render(request, "staff_panel/proposal_detail.html", {
     "proposal": proposal,
     "message_form": message_form,
+    "offer_form": offer_form,
     })
 

@@ -39,23 +39,42 @@
 <div class="card">
     <h2>Messaggi</h2>
 
-    {% for message in proposal.messages.all %}
-        <div>
-            <strong>{{ message.sender.username }}</strong>
-            <small>{{ message.created_at }}</small>
-            <p>{{ message.body }}</p>
-        </div>
-        <hr>
-    {% empty %}
-        <p>Non ci sono ancora messaggi.</p>
-    {% endfor %}
+    <div class="chat-box">
+        {% for message in proposal.messages.all %}
+            {% if message.sender == request.user %}
+                <div class="chat-row chat-row-own">
+                    <div class="chat-bubble chat-bubble-own">
+                        <div class="chat-meta">
+                            Tu · {{ message.created_at|date:"d/m/Y H:i" }}
+                        </div>
+                        <div class="chat-text">
+                            {{ message.body }}
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="chat-row chat-row-other">
+                    <div class="chat-bubble chat-bubble-other">
+                        <div class="chat-meta">
+                            {{ message.sender.username }} · {{ message.created_at|date:"d/m/Y H:i" }}
+                        </div>
+                        <div class="chat-text">
+                            {{ message.body }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% empty %}
+            <p>Non ci sono ancora messaggi.</p>
+        {% endfor %}
+    </div>
 
-    <form method="post">
+    <form method="post" class="chat-form">
         {% csrf_token %}
         <input type="hidden" name="action" value="send_message">
-        {{ message_form.as_p }}
+        {{ message_form.body }}
 
-        <button class="button" type="submit">Invia messaggio</button>
+        <button class="button" type="submit">Invia</button>
     </form>
 </div>
 

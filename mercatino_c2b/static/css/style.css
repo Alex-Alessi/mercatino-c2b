@@ -105,3 +105,72 @@ select {
     margin-right: 8px;
     margin-bottom: 8px;
 }
+
+.chat-box {
+    max-height: 420px;
+    overflow-y: auto;
+    background: #f3f3f3;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.chat-row {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+.chat-row-own {
+    justify-content: flex-end;
+}
+
+.chat-row-other {
+    justify-content: flex-start;
+}
+
+.chat-bubble {
+    max-width: 70%;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+.chat-bubble-own {
+    background: #222;
+    color: #fff;
+    border-color: #222;
+}
+
+.chat-bubble-other {
+    background: #fff;
+    color: #222;
+}
+
+.chat-meta {
+    font-size: 12px;
+    opacity: 0.75;
+    margin-bottom: 4px;
+}
+
+.chat-text {
+    line-height: 1.4;
+    white-space: pre-line;
+}
+
+.chat-form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.chat-form textarea {
+    flex: 1;
+    min-height: 44px;
+    max-height: 120px;
+    resize: vertical;
+}
+
+.chat-form .button {
+    height: 44px;
+}
