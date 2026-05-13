@@ -4,6 +4,28 @@
 
 {% block content %}
 <div class="card">
+    <h2>Trattativa</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="mark_negotiation">
+        {{ offer_form.as_p }}
+        <button class="button" type="submit">Metti in trattativa</button>
+    </form>
+
+    <form method="post" style="margin-top:15px">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="reject">
+        <button class="button" type="submit">Rifiuta proposta</button>
+    </form>
+
+    <form method="post" style="margin-top:15px">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="completed">
+        <button class="button" type="submit">Segna completato</button>
+    </form>
+</div>
+
+<div class="card">
     <h1>{{ proposal.title }}</h1>
 
     <p>
@@ -26,6 +48,28 @@
         {% for image in proposal.images.all %}
             <img class="image-preview" src="{{ image.image.url }}" alt="">
         {% endfor %}
+    {% endif %}
+</div>
+
+<div class="card">
+    <h2>Offerta admin</h2>
+
+    {% if proposal.status == "offer_accepted" or proposal.status == "vinted_link_sent" or proposal.status == "completed" %}
+        {% if proposal.admin_offer %}
+            <p><strong>Offerta inviata:</strong> € {{ proposal.admin_offer }}</p>
+        {% else %}
+            <p>Nessuna offerta inserita.</p>
+        {% endif %}
+
+        <p>Questa offerta non è più modificabile perché la trattativa è già avanzata.</p>
+    {% else %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="send_offer">
+            {{ offer_form.as_p }}
+
+            <button class="button" type="submit">Invia offerta</button>
+        </form>
     {% endif %}
 </div>
 
