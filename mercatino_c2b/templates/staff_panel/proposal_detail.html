@@ -3,27 +3,34 @@
 {% block title %}{{ proposal.title }}{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h2>Trattativa</h2>
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="mark_negotiation">
-        {{ offer_form.as_p }}
-        <button class="button" type="submit">Metti in trattativa</button>
-    </form>
+{% if proposal.status != "rejected" and proposal.status != "completed" %}
+    <div class="card">
+        <h2>Trattativa</h2>
+        {% if proposal.status == "under_review" %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="mark_negotiation">
+                <button class="button" type="submit">Metti in trattativa</button>
+            </form>
+        {% endif %}
 
-    <form method="post" style="margin-top:15px">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="reject">
-        <button class="button" type="submit">Rifiuta proposta</button>
-    </form>
-
-    <form method="post" style="margin-top:15px">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="completed">
-        <button class="button" type="submit">Segna completato</button>
-    </form>
-</div>
+        {% if proposal.status != "rejected" and proposal.status != "completed" %}
+            <form method="post" style="margin-top:15px">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="reject">
+                <button class="button" type="submit">Rifiuta proposta</button>
+            </form>
+        {% endif %}
+        
+        {% if proposal.status == "vinted_link_sent" %}
+            <form method="post" style="margin-top:15px">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="complete">
+                <button class="button" type="submit">Segna completato</button>
+            </form>
+        {% endif %}
+    </div>
+{% endif %}
 
 <div class="card">
     <h1>{{ proposal.title }}</h1>

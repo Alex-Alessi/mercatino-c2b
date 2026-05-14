@@ -72,7 +72,7 @@ def proposal_detail_view(request, pk):
 
         elif action == "send_vinted_link":
             if not proposal.can_user_send_vinted_link():
-                messages.error(request, "Non puoi ancora inserire il link Vinted.")
+                messages.error(request, "Non puoi ancora inserire il link dell'annuncio.")
                 return redirect("proposal_detail", pk=proposal.pk)
 
             vinted_form = VintedLinkForm(request.POST, instance=proposal)

@@ -60,10 +60,10 @@ def staff_proposal_detail_view(request, pk):
             proposal.status = ItemProposal.Status.REJECTED
             proposal.save(update_fields=["status"])
 
-            messages.success(request, "Offerta rifiutata.")
+            messages.success(request, "Proposta rifiutata.")
             return redirect("staff_proposal_detail", pk=proposal.pk)
 
-        elif action == "completed":
+        elif action == "complete":
             proposal.status = ItemProposal.Status.COMPLETED
             proposal.save(update_fields=["status"])
 

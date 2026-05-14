@@ -22,6 +22,8 @@
                 <p>Offerta admin: € {{ proposal.admin_offer }}</p>
             {% endif %}
 
+            <p>Pubblicato il: {{ proposal.created_at }}</p>
+
             <a class="button secondary" href="{% url 'staff_proposal_detail' proposal.pk %}">
                 Apri proposta
             </a>
