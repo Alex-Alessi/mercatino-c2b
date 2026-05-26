@@ -16,11 +16,16 @@
         <nav>
             {% if user.is_authenticated %}
                 <a href="{% url 'dashboard' %}">Dashboard</a>
-                <a href="{% url 'proposal_create' %}">Nuova proposta</a>
+                {% if user.is_staff %}
+                    <a href="{% url 'staff_proposal_list' %}">Proposte ricevute</a>
+                {% else %}
+                    <a href="{% url 'proposal_create' %}">Nuova proposta</a>
+                {% endif %}
                 <form method="POST" action="{% url 'logout' %}">
                     {% csrf_token %}
                     <button type="submit" class="logout-button">Esci</button>
                 </form>
+                
             {% else %}
                 <a href="{% url 'login' %}">Accedi</a>
                 <a href="{% url 'register' %}">Registrati</a>

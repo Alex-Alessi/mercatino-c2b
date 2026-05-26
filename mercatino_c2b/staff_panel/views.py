@@ -9,11 +9,20 @@ from .forms import AdminOfferForm
 @login_required
 @user_passes_test(lambda user: user.is_staff)
 def staff_proposal_list_view(request):
-    proposals = ItemProposal.objects.all().order_by("-created_at")
+    selected_status = request.GET.get("status")
+    
+    proposals = ItemProposal.objects.all()
+
+    if selected_status:
+        proposals = proposals.filter(status=selected_status)
+
+    proposals = proposals.order_by("-created_at")
 
     return render(request, "staff_panel/proposal_list.html", {
         "proposals": proposals,
-    },)
+        "selected_status": selected_status,
+        "status_choices": ItemProposal.Status.choices,
+    })
 
 @login_required
 @user_passes_test(lambda user: user.is_staff)

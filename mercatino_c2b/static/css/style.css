@@ -39,6 +39,20 @@ nav a {
     color: #222;
 }
 
+nav form {
+    display: inline;
+    margin-left: 16px;
+}
+
+.logout-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #222;
+    font: inherit;
+    cursor: pointer;
+}
+
 .card {
     background: #fff;
     border: 1px solid #ddd;
@@ -173,4 +187,19 @@ select {
 
 .chat-form .button {
     height: 44px;
+}
+
+.filter-form {
+    display: flex;
+    gap: 12px;
+    align-items: end;
+    margin-top: 16px;
+}
+
+.filter-form label {
+    font-weight: bold;
+}
+
+.filter-form select {
+    max-width: 260px;
 }

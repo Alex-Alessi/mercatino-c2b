@@ -4,25 +4,57 @@
 
 {% block content %}
 
-<h1>Proposte ricevute</h1>
+<div class="card">
+    <h1>Proposte ricevute</h1>
+
+    <p>Gestisci le proposte inviate dagli utenti</p>
+
+    <p>Proposte visualizzate: {{ proposals|length }}</p>
+
+    <form method="get" class="filter-form">
+        <label for="status">Filtra per stato</label>
+
+        <select name="status" id="status">
+            <option value="">Tutte</option>
+
+            {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+        <button type="submit">Filtra</button>
+    </form>
+</div>
 
 <div class="proposal-grid">
     {% for proposal in proposals %}
         <div class="card">
             <h2>{{ proposal.title }}</h2>
 
-            <p>Utente: {{ proposal.user.username }}</p>
             <p>Stato: {{ proposal.get_status_display }}</p>
+
+            <p>Utente: {{ proposal.user.username }}</p>
+
+            {% if proposal.user.email %}
+                <p>Email: {{ proposal.user.email }}</p>
+            {% else %}
+                <p>Email: non disponibile</p>
+            {% endif %}
 
             {% if proposal.requested_price %}
                 <p>Prezzo richiesto: € {{ proposal.requested_price }}</p>
+            {% else %}
+                <p>Prezzo richiesto: non indicato</p>
             {% endif %}
 
             {% if proposal.admin_offer %}
                 <p>Offerta admin: € {{ proposal.admin_offer }}</p>
+            {% else %}
+                <p>Offerta admin: non ancora inviata</p>
             {% endif %}
 
-            <p>Pubblicato il: {{ proposal.created_at }}</p>
+            <p>Pubblicato il: {{ proposal.created_at|date:"d/m/Y H:i" }}</p>
 
             <a class="button secondary" href="{% url 'staff_proposal_detail' proposal.pk %}">
                 Apri proposta
