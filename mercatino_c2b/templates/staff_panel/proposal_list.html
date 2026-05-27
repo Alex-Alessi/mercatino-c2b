@@ -14,7 +14,7 @@
     <form method="get" class="filter-form">
         <label for="status">Filtra per stato</label>
 
-        <select name="status" id="status">
+        <select name="status" id="status" onchange="this.form.submit()">
             <option value="">Tutte</option>
 
             {% for value, label in status_choices %}
@@ -23,7 +23,7 @@
                 </option>
             {% endfor %}
         </select>
-        <button type="submit">Filtra</button>
+        {% comment %} <button type="submit">Filtra</button> {% endcomment %}
     </form>
 </div>
 
@@ -32,7 +32,19 @@
         <div class="card">
             <h2>{{ proposal.title }}</h2>
 
-            <p>Stato: {{ proposal.get_status_display }}</p>
+            {% with first_image=proposal.images.first %}
+                {% if first_image %}
+                    <img class="staff-proposal-thumb" src="{{ first_image.image.url }}" alt="{{ proposal.title }}">
+                {% else %}
+                    <p>Nessuna immagine caricata.</p>
+                {% endif %}
+            {% endwith %}
+
+            <p>Stato: 
+                <span class="badge {{ proposal.status_badge_class }}">
+                    {{ proposal.get_status_display }}
+                </span>
+            </p>
 
             <p>Utente: {{ proposal.user.username }}</p>
 

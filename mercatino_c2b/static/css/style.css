@@ -108,6 +108,41 @@ select {
     background: #eee;
 }
 
+.badge-gray {
+    background: #eee;
+    color: #333;
+}
+
+.badge-blue {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.badge-purple {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.badge-green {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-dark-green {
+    background: #14532d;
+    color: #fff;
+}
+
+.badge-orange {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.badge-red {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
 .proposal-grid {
     display: grid;
     gap: 16px;
@@ -202,4 +237,53 @@ select {
 
 .filter-form select {
     max-width: 260px;
+}
+
+.staff-proposal-thumb {
+    width: 160px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.clickable-image {
+    cursor: pointer;
+}
+
+.image-lightbox {
+    display: none;
+    position:fixed;
+    z-index: 9999;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.image-lightbox.is-open {
+    display: flex;
+}
+
+.image-lightbox img {
+    max-width: 95vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
+.image-lightbox-close {
+    position: fixed;
+    top: 20px;
+    right: 24px;
+    background: #fff;
+    color: #222;
+    border: none;
+    border-radius: 999px;
+    width: 42px;
+    height: 42px;
+    font-size: 28px;
+    cursor: pointer;
 }

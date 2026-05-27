@@ -37,7 +37,7 @@
 
     <p>
         Stato:
-        <span class="badge">{{ proposal.get_status_display }}</span>
+        <span class="badge {{ proposal.status_badge_class }}">{{ proposal.get_status_display }}</span>
     </p>
 
     <p>{{ proposal.description }}</p>
@@ -53,7 +53,7 @@
     {% if proposal.images.all %}
         <h3>Foto</h3>
         {% for image in proposal.images.all %}
-            <img class="image-preview" src="{{ image.image.url }}" alt="">
+            <img class="image-preview clickable-image" src="{{ image.image.url }}" alt="{{ proposal.title }}" data-full="{{ image.image.url }}">
         {% endfor %}
     {% endif %}
 </div>

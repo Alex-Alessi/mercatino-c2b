@@ -29,11 +29,11 @@ def proposal_create_view(request):
             proposal.user = request.user
             proposal.save()
 
-            images = request.FILES.get("images")
-            if images:
+            images = request.FILES.getlist("images")
+            for image in images:
                 ProposalImage.objects.create(
                     proposal=proposal,
-                    image=images,
+                    image=image,
                 )
             messages.success(request, "Proposta inviata correttamente.")
             return redirect("proposal_detail", pk=proposal.pk)

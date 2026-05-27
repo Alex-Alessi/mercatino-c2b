@@ -48,6 +48,21 @@ class ItemProposal(models.Model):
             self.Status.OFFER_ACCEPTED,
             self.Status.WAITING_VINTED_LINK,
         ]
+    
+    @property
+    def status_badge_class(self):
+        classes = {
+            self.Status.UNDER_REVIEW: "badge-gray",
+            self.Status.NEGOTIATION: "badge-blue",
+            self.Status.OFFER_SENT: "badge-purple",
+            self.Status.OFFER_ACCEPTED: "badge-green",
+            self.Status.WAITING_VINTED_LINK: "badge-orange",
+            self.Status.VINTED_LINK_SENT: "badge-orange",
+            self.Status.COMPLETED: "badge-green",
+            self.Status.REJECTED: "badge-red",
+        }
+
+        return classes.get(self.status, "badge-gray")
 
     def __str__(self):
         return self.title

@@ -17,7 +17,7 @@
 
             <p>
                 Stato:
-                <span class="badge">{{ proposal.get_status_display }}</span>
+                <span class="badge {{proposal.status_badge_class}}">{{ proposal.get_status_display }}</span>
             </p>
 
             {% if proposal.requested_price %}

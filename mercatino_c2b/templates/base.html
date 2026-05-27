@@ -46,5 +46,35 @@
     {% block content %}{% endblock %}
 </main>
 
+<div id="image-lightbox" class="image-lightbox">
+    <button type="button" class="image-lightbox-close">&times;</button>
+    <img id="image-lightbox-img" src="" alt="">
+</div>
+
+<script>
+    const lightbox = document.getElementById("image-lightbox");
+    const lightboxImg = document.getElementById("image-lightbox-img");
+    const lightboxClose = document.querySelector(".image-lightbox-close");
+
+    document.querySelectorAll(".clickable-image").forEach((image) => {
+        image.addEventListener("click", () => {
+            lightboxImg.src = image.dataset.full;
+            lightbox.classList.add("is-open");
+        });
+    });
+
+    lightboxClose.addEventListener("click", () => {
+        lightbox.classList.remove("is-open");
+        lightboxImg.src = "";
+    });
+
+    lightbox.addEventListener("click", (event) => {
+        if (event.target === lightbox) {
+            lightbox.classList.remove("is-open");
+            lightboxImg.src = "";
+        }
+    });
+</script>
+
 </body>
 </html>
