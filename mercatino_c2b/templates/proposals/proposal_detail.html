@@ -23,9 +23,38 @@
 
     {% if proposal.images.all %}
         <h3>Foto</h3>
-        {% for image in proposal.images.all %}
-            <img class="image-preview clickable-image" src="{{ image.image.url }}" alt="{{ proposal.title }}" data-full="{{ image.image.url }}">
-        {% endfor %}
+        {% with total_images=proposal.images.all|length %}
+            <div class="image-preview-grid">
+                {% for image in proposal.images.all %}
+                    {% if forloop.counter <= 4 %}
+                        <div class="image-preview-wrapper">
+                            <img 
+                                class="image-preview clickable-image" 
+                                src="{{ image.image.url }}" 
+                                alt="{{ proposal.title }}" 
+                                data-full="{{ image.image.url }}"
+                                data-gallery="proposal-{{ proposal.pk }}"
+                                data-index="{{ forloop.counter0 }}"
+                                >
+                            {% if forloop.counter == 4 and total_images > 3 %}
+                                <div class="image-overlay">
+                                    +{{ total_images|add:"-3" }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <img 
+                            class="gallery-hidden clickable-image" 
+                            src="{{ image.image.url }}" 
+                            alt="{{ proposal.title }}" 
+                            data-full="{{ image.image.url }}"
+                            data-gallery="proposal-{{ proposal.pk }}"
+                            data-index="{{ forloop.counter0 }}"
+                            >
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endwith %}
     {% endif %}
     {% if proposal.admin_offer and proposal.status == "offer_sent" %}
         <form method="POST">

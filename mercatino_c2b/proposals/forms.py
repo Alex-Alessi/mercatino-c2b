@@ -35,6 +35,14 @@ class ItemProposalForm(forms.ModelForm):
             "description": "Descrizione",
             "requested_price": "Prezzo richiesto",
         }
+    
+    def clean_images(self):
+        images = self.cleaned_data.get("images")
+
+        if not images:
+            raise forms.ValidationError("Carica almeno una foto dell'oggetto.")
+        
+        return images
 
 class ProposalMessageForm(forms.ModelForm):
     class Meta:
