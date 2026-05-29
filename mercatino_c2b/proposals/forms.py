@@ -38,10 +38,22 @@ class ItemProposalForm(forms.ModelForm):
     
     def clean_images(self):
         images = self.cleaned_data.get("images")
+        max_size = 5*1024*1024
+        allowed_types = ["image/jpeg", "image/png", "image/webp"]
 
         if not images:
             raise forms.ValidationError("Carica almeno una foto dell'oggetto.")
+
+        if len(images) > 8:
+            raise forms.ValidationError("Puoi caricare massimo 8 foto.")
+
+        for image in images:
+            if image.size > max_size:
+                raise forms.ValidationError("Ogni foto può pesare al massimo 5 MB.")
         
+        if image.content_type not in allowed_types:
+            raise forms.ValidationError("Puoi caricare solo immagini JPG, PNG o WEBP.")
+
         return images
 
 class ProposalMessageForm(forms.ModelForm):

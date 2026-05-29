@@ -280,6 +280,19 @@ select {
     max-width: 260px;
 }
 
+.form-error-box {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+}
+
+.form-error-box p {
+    margin: 6px 0 0;
+}
+
 .staff-proposal-thumb {
     width: 160px;
     height: 120px;

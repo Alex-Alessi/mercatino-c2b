@@ -8,6 +8,12 @@
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+        {% if form.errors %}
+            <div class="form-error-box">
+                <strong>Attenzione:</strong>
+                <p>Controlla i campi evidenziati.</p>
+            </div>
+        {% endif %}
         {{ form.as_p }}
 
         <button class="button" type="submit">Invia proposta</button>
