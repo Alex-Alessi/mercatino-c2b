@@ -46,7 +46,11 @@
                 </span>
             </p>
 
-            <p>Utente: {{ proposal.user.username }}</p>
+            {% if proposal.user.first_name or proposal.user.last_name %}
+                <p>Utente: {{ proposal.user.first_name }} {{ proposal.user.last_name }}</p>
+            {% else %}
+                <p>Utente: {{ proposal.user.username }}</p>
+            {% endif %}
 
             {% if proposal.user.email %}
                 <p>Email: {{ proposal.user.email }}</p>
