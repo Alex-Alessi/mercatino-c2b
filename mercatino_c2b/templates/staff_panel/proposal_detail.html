@@ -40,6 +40,26 @@
         <span class="badge {{ proposal.status_badge_class }}">{{ proposal.get_status_display }}</span>
     </p>
 
+    <h3>Utente</h3>
+
+    {% if proposal.user.first_name or proposal.user.last_name %}
+        <p>Nome: {{ proposal.user.first_name }} {{ proposal.user.last_name }}</p>
+    {% else %}
+        <p>Nome: {{ proposal.user.username }}</p>
+    {% endif %}
+
+    {% if proposal.user.email %}
+        <p>Email: {{ proposal.user.email }}</p>
+    {% else %}
+        <p>Email: non disponibile</p>
+    {% endif %}
+
+    {% if proposal.user.profile.phone %}
+        <p>Telefono: {{ proposal.user.profile.phone }}</p>
+    {% else %}
+        <p>Telefono: non disponibile</p>
+    {% endif %}
+
     <p>{{ proposal.description }}</p>
 
     {% if proposal.requested_price %}

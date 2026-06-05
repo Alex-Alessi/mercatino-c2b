@@ -18,3 +18,6 @@ def register_view(request):
         form = RegistrationForm()
 
     return render(request, "accounts/register.html", {"form": form})
+
+def privacy_policy_view(request):
+    return render(request, "accounts/privacy_policy.html")

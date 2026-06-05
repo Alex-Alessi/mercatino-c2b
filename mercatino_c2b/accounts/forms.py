@@ -25,6 +25,11 @@ class RegistrationForm(UserCreationForm):
         max_length=20
     )
 
+    privacy = forms.BooleanField(
+        required=True,
+        label="Accetto la Privacy Policy e il trattamento dei dati personali",
+    )
+
     class Meta:
         model = User
         fields = [
@@ -34,7 +39,8 @@ class RegistrationForm(UserCreationForm):
             "email",
             "phone",
             "password1",
-            "password2"
+            "password2",
+            "privacy",
         ]
     
     def save(self, commit=True):

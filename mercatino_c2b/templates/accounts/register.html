@@ -8,9 +8,26 @@
 
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-
+        {{ form.username.as_field_group }}
+        {{ form.first_name.as_field_group }}
+        {{ form.last_name.as_field_group }}
+        {{ form.email.as_field_group }}
+        {{ form.phone.as_field_group }}
+        {{ form.password1.as_field_group }}
+        {{ form.password2.as_field_group }}
+        <div>
+            <label for="{{ form.privacy.id_for_label }}">
+                Accetto la
+                <a href="{% url 'privacy_policy' %}" target="_blank">
+                    Privacy Policy
+                </a>
+                e il trattamento dei dati personali.
+            </label>
+            {{ form.privacy }}
+        </div>
+        
         <button class="button" type="submit">Crea account</button>
     </form>
 </div>
 {% endblock %}
+

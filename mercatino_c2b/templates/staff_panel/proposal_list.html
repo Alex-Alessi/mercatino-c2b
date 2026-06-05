@@ -58,6 +58,12 @@
                 <p>Email: non disponibile</p>
             {% endif %}
 
+            {% if proposal.user.profile.phone %}
+                <p>Telefono: {{ proposal.user.profile.phone }}</p>
+            {% else %}
+                <p>Telefono: non disponibile</p>
+            {% endif %}
+
             {% if proposal.requested_price %}
                 <p>Prezzo richiesto: € {{ proposal.requested_price }}</p>
             {% else %}
