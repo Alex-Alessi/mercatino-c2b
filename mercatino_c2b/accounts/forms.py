@@ -42,7 +42,28 @@ class RegistrationForm(UserCreationForm):
             "password2",
             "privacy",
         ]
+
+    def clean_phone(self):
+        phone = self.cleaned_data["phone"].strip()
+
+        normalized = phone.replace(" ","")
+
+        if normalized.startswith("+"):
+            normalized = normalized[1:]
+
+        if not normalized.isdigit():
+            raise forms.ValidationError("Inserisci un numero di telefono valido.")
+        
+        return phone
     
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+
+        if User.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError("Esiste già un account con questa email.")
+        
+        return email
+
     def save(self, commit=True):
         user = super().save(commit=False)
         user.first_name = self.cleaned_data["first_name"]
@@ -57,3 +78,4 @@ class RegistrationForm(UserCreationForm):
             )
         
         return user
+    
