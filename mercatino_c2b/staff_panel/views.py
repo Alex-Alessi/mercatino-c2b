@@ -4,6 +4,8 @@ from proposals.models import ItemProposal
 from proposals.forms import ProposalMessageForm
 from django.contrib import messages
 from .forms import AdminOfferForm
+from django.core.mail import send_mail
+from django.conf import settings
 
 # Create your views here.
 @login_required
@@ -54,6 +56,20 @@ def staff_proposal_detail_view(request, pk):
                 proposal.status = ItemProposal.Status.OFFER_SENT
                 proposal.offer_seen_by_user = False
                 proposal.save(update_fields=["admin_offer", "status", "offer_seen_by_user", "updated_at"])
+
+                if proposal.user.email:
+                    send_mail(
+                        subject="Hai ricevuto una nuova offerta",
+                        message=(
+                            f"Ciao {proposal.user.first_name or proposal.user.username},\n\n"
+                            f"Abbiamo valutato la tua proposta '{proposal.title}'.\n\n"
+                            f"La nostra offerta è di € {proposal.admin_offer}.\n\n"
+                            f"Accedi al sito per visualizzare i dettagli e continuare la trattativa."
+                        ),
+                        from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+                        recipient_list=[proposal.user.email],
+                        fail_silently=False,
+                    )
 
                 messages.success(request, "Offerta inviata correttamente.")
                 return redirect("staff_proposal_detail", pk=proposal.pk)
