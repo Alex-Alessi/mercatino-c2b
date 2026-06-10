@@ -85,6 +85,20 @@ def staff_proposal_detail_view(request, pk):
             proposal.status = ItemProposal.Status.REJECTED
             proposal.save(update_fields=["status"])
 
+            if proposal.user.email:
+                send_mail(
+                    subject="Aggiornamento sulla tua proposta",
+                    message=(
+                        f"Ciao {proposal.user.first_name or proposal.user.username},\n\n"
+                        f"Dopo la valutazione, la proposta '{proposal.title}' "
+                        f"non è stata accettata.\n\n"
+                        f"Ti ringraziamo per aver utilizzato il nostro servizio."
+                    ),
+                    from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+                    recipient_list=[proposal.user.email],
+                    fail_silently=False
+                )
+
             messages.success(request, "Proposta rifiutata.")
             return redirect("staff_proposal_detail", pk=proposal.pk)
 
