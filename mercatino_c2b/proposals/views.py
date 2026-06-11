@@ -3,8 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import ItemProposalForm, ProposalMessageForm, VintedLinkForm
 from .models import ItemProposal, ProposalImage, ProposalMessage
-from django.core.mail import send_mail
-from django.conf import settings
+from proposals.utils import (send_notification_email, get_staff_emails,)
 
 # Create your views here.
 
@@ -83,18 +82,19 @@ def proposal_detail_view(request, pk):
                 proposal.status = ItemProposal.Status.VINTED_LINK_SENT
                 proposal.save()
 
-                send_mail(
-                    subject="Nuovo link Vinted ricevuto",
-                    message=(
-                        f"L'utente {proposal.user.username} "
-                        f"ha inserito il link Vinted per la proposta "
-                        f"'{proposal.title}'.\n\n"
-                        f"Link: {proposal.vinted_url}"
-                    ),
-                    from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
-                    recipient_list=["staff@mercatino.it"],
-                    fail_silently=False,
-                )
+                staff_emails = get_staff_emails()
+
+                if staff_emails:
+                    send_notification_email(
+                        subject="Nuovo link Vinted ricevuto",
+                        message=(
+                            f"L'utente {proposal.user.first_name or proposal.user.username} "
+                            f"ha inserito il link Vinted per la proposta "
+                            f"'{proposal.title}'.\n\n"
+                            f"Link: {proposal.vinted_url}"
+                        ),
+                        recipients=staff_emails,
+                    )
 
                 messages.success(request, "Link Vinted inviato correttamente.")
                 return redirect("proposal_detail", pk=proposal.pk)

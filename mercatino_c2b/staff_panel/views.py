@@ -4,8 +4,8 @@ from proposals.models import ItemProposal
 from proposals.forms import ProposalMessageForm
 from django.contrib import messages
 from .forms import AdminOfferForm
-from django.core.mail import send_mail
-from django.conf import settings
+from proposals.utils import send_notification_email
+
 
 # Create your views here.
 @login_required
@@ -45,6 +45,18 @@ def staff_proposal_detail_view(request, pk):
                 message.sender = request.user
                 message.save()
 
+                if proposal.user.email:
+                    send_notification_email(
+                        subject="Hai ricevuto un nuovo messaggio",
+                        message=(
+                            f"Ciao {proposal.user.first_name or proposal.user.username},\n\n"
+                            f"Hai ricevuto un nuovo messaggio riguardo alla proposta "
+                            f"'{proposal.title}'.\n\n"
+                            f"Accedi al sito per leggerlo e rispondere."
+                        ),
+                        recipients=[proposal.user.email],
+                    )
+
                 messages.success(request, "Messaggio inviato.")
                 return redirect("staff_proposal_detail", pk=proposal.pk)
             
@@ -58,7 +70,7 @@ def staff_proposal_detail_view(request, pk):
                 proposal.save(update_fields=["admin_offer", "status", "offer_seen_by_user", "updated_at"])
 
                 if proposal.user.email:
-                    send_mail(
+                    send_notification_email(
                         subject="Hai ricevuto una nuova offerta",
                         message=(
                             f"Ciao {proposal.user.first_name or proposal.user.username},\n\n"
@@ -66,9 +78,7 @@ def staff_proposal_detail_view(request, pk):
                             f"La nostra offerta è di € {proposal.admin_offer}.\n\n"
                             f"Accedi al sito per visualizzare i dettagli e continuare la trattativa."
                         ),
-                        from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
-                        recipient_list=[proposal.user.email],
-                        fail_silently=False,
+                        recipients=[proposal.user.email],
                     )
 
                 messages.success(request, "Offerta inviata correttamente.")
@@ -86,7 +96,7 @@ def staff_proposal_detail_view(request, pk):
             proposal.save(update_fields=["status"])
 
             if proposal.user.email:
-                send_mail(
+                send_notification_email(
                     subject="Aggiornamento sulla tua proposta",
                     message=(
                         f"Ciao {proposal.user.first_name or proposal.user.username},\n\n"
@@ -94,9 +104,7 @@ def staff_proposal_detail_view(request, pk):
                         f"non è stata accettata.\n\n"
                         f"Ti ringraziamo per aver utilizzato il nostro servizio."
                     ),
-                    from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
-                    recipient_list=[proposal.user.email],
-                    fail_silently=False
+                    recipients=[proposal.user.email],
                 )
 
             messages.success(request, "Proposta rifiutata.")
