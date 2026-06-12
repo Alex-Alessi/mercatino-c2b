@@ -127,3 +127,31 @@ def proposal_detail_view(request, pk):
             "vinted_form": vinted_form,
         },
     )
+
+@login_required
+def proposal_delete_view(request, pk):
+    proposal = get_object_or_404(
+        ItemProposal,
+        pk=pk,
+        user=request.user
+    )
+
+    if not proposal.can_be_deleted():
+        messages.error(
+            request,
+            "Non puoi eliminare questa proposta perché è già in lavorazione."
+        )
+        return redirect("proposal_detail", pk=proposal.pk)
+
+    if request.method == "POST":
+        proposal.delete()
+        messages.success(request, "Proposta eliminata.")
+        return redirect("dashboard")
+
+    return render(
+        request,
+        "proposals/proposal_confirm_delete.html",
+        {
+            "proposal": proposal,
+        },
+    )

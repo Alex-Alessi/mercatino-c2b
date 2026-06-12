@@ -45,7 +45,7 @@ class ItemProposalForm(forms.ModelForm):
             raise forms.ValidationError("Carica almeno una foto dell'oggetto.")
 
         if len(images) > 8:
-            raise forms.ValidationError("Puoi caricare massimo 8 foto.")
+            raise forms.ValidationError("Puoi caricare al massimo 8 foto.")
 
         for image in images:
             if image.size > max_size:

@@ -64,6 +64,13 @@ class ItemProposal(models.Model):
 
         return classes.get(self.status, "badge-gray")
 
+    def can_be_deleted(self):
+        return(
+            self.status == self.Status.UNDER_REVIEW
+            and not self.messages.exists()
+            and not self.admin_offer
+        )
+
     def __str__(self):
         return self.title
 
@@ -90,7 +97,7 @@ class ProposalMessage(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    body = models.TextField()
+    body = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
