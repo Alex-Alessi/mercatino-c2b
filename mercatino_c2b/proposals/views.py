@@ -145,7 +145,7 @@ def proposal_delete_view(request, pk):
 
     if request.method == "POST":
         proposal.delete()
-        messages.success(request, "Proposta eliminata.")
+        messages.success(request, "Proposta eliminata correttamente")
         return redirect("dashboard")
 
     return render(

@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 
 # Create your models here.
 
@@ -105,3 +107,8 @@ class ProposalMessage(models.Model):
 
     def __str__(self):
         return f"Messaggio di {self.sender}"
+    
+@receiver(post_delete, sender=ProposalImage)
+def delete_proposal_image_file(sender, instance, **kwargs):
+    if instance.image:
+        instance.image.delete(save=False)

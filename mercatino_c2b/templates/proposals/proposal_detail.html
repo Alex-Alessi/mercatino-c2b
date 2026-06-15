@@ -134,4 +134,10 @@
         </p>
     </div>
 {% endif %}
+
+{% if proposal.can_be_deleted %}
+    <div class="card">
+        <a class="button" href="{% url 'proposal_delete' proposal.pk %}">Elimina proposta</a>
+    </div>
+{% endif %}
 {% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Elimina proposta{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Elimina proposta</h1>
+
+    <p>
+        Sei sicuro di voler eliminare la proposta<strong>{{ proposal.title }}</strong>?
+    </p>
+
+    <p>
+        Questa operazione non può essere annullata.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <button class="button" type="submit">
+            Si, elimina
+        </button>
+
+        <a class="button secondary"
+            href="{% url 'proposal_detail' proposal.pk %}">
+                Annulla
+        </a>
+    </form>
+</div>
+{% endblock %}
