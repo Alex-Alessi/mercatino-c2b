@@ -380,6 +380,12 @@ select {
     z-index: 10000;
 }
 
+.active-nav {
+    font-weight: 700;
+    border-bottom: 2px solid currentColor;
+}
+
+
 @media (max-width: 700px) {
     .image-lightbox img {
         max-width: 92vw;
