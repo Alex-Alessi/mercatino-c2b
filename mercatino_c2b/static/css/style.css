@@ -18,6 +18,7 @@ body {
 .site-header {
     background: #fff;
     border-bottom: 1px solid #ddd;
+    padding: 16px 0;
 }
 
 .header-inner {
@@ -57,7 +58,7 @@ nav form {
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 12px;
-    padding: 24px;
+    padding: 20px;
     margin-bottom: 20px;
 }
 
@@ -145,7 +146,18 @@ select {
 
 .proposal-grid {
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 16px;
+}
+
+.dashboard-proposal-thumb{
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08)
 }
 
 .image-preview {
@@ -268,8 +280,9 @@ select {
 .filter-form {
     display: flex;
     gap: 12px;
-    align-items: end;
+    align-items: center;
     margin-top: 16px;
+    flex-wrap: wrap;
 }
 
 .filter-form label {

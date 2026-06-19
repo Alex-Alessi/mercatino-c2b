@@ -9,13 +9,29 @@ from proposals.utils import (send_notification_email, get_staff_emails,)
 
 @login_required
 def dashboard_view(request):
-    proposals = ItemProposal.objects.filter(user=request.user).order_by("-created_at")
+    selected_status = request.GET.get("status")
+    search_query = request.GET.get("q", "").strip()
+
+    proposals = ItemProposal.objects.filter(user=request.user)
+
+    if selected_status:
+        proposals = proposals.filter(status=selected_status)
+
+    if search_query:
+        proposals = proposals.filter(
+            title__icontains=search_query
+        )
+    
+    proposals = proposals.order_by("created_at")
 
     return render(
         request,
         "proposals/dashboard.html",
         {
             "proposals": proposals,
+            "selected_status": selected_status,
+            "status_choices": ItemProposal.Status.choices,
+            "search_query": search_query,
         },
     )
 

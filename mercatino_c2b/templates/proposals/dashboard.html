@@ -7,6 +7,42 @@
     <h1>I miei oggetti</h1>
     <p>Qui puoi vedere lo stato delle tue proposte.</p>
 
+    <form method="get" class="filter-form">
+
+        <input
+            type="text"
+            id="q"
+            name="q"
+            value="{{ search_query }}"
+            placeholder="Titolo proposta..."
+        >
+
+        <select name="status">
+            <option value="">Tutte</option>
+
+            {% for value, label in status_choices %}
+                <option
+                    value="{{ value }}"
+                    {% if selected_status == value %}selected{% endif %}
+                >
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button class="button" type="submit">
+            Cerca
+        </button>
+
+        {% if selected_status or search_query %}
+            <a class="button secondary" href="{% url 'dashboard' %}">
+                Reset
+            </a>
+        {% endif %}
+    </form>
+
+    <p>Proposte visualizzate: {{ proposals|length }}</p>
+
     <a class="button" href="{% url 'proposal_create' %}">Proponi un nuovo oggetto</a>
 </div>
 
@@ -14,6 +50,15 @@
     {% for proposal in proposals %}
         <div class="card">
             <h2>{{ proposal.title }}</h2>
+            {% with first_image=proposal.images.first %}
+                {% if first_image %}
+                    <img
+                        class="dashboard-proposal-thumb"
+                        src="{{ first_image.image.url }}"
+                        alt="{{ proposal.title }}"
+                    >
+                {% endif %}
+            {% endwith %}
 
             <p>
                 Stato:
