@@ -4,18 +4,39 @@
 
 {% block content %}
 <div class="card">
-    <h1>Profilo</h1>
+    <h1>👤 Profilo</h1>
 
-    <p><strong>Nome:</strong> {{ request.user.first_name }}</p>
+    <div class="profile-info">
+        <div class="profile-row">
+            <span class="profile-label">Nome</span>
+            <span>{{ request.user.first_name }}</span>
+        </div>
 
-    <p><strong>Cognome:</strong> {{ request.user.last_name }}</p>
+        <div class="profile-row">
+            <span class="profile-label">Cognome</span>
+            <span>{{ request.user.last_name }}</span>
+        </div>
 
-    <p><strong>Email:</strong> {{ request.user.email }}</p>
+        <div class="profile-row">
+            <span class="profile-label">Email</span>
+            <span>{{ request.user.email }}</span>
+        </div>
 
-    <p><strong>Telefono:</strong> {{ request.user.profile.phone }}</p>
+        <div class="profile-row">
+            <span class="profile-label">Telefono</span>
+            <span>{{ request.user.profile.phone }}</span>
+        </div>
 
-    <a class="button" href="{% url 'password_change' %}">
-        Cambia password
-    </a>
+        <div class="profile-row">
+            <span class="profile-label">Registrato il</span>
+            <span>{{ request.user.date_joined|date:"d/m/Y" }}</span>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a class="button" href="{% url 'password_change' %}">
+            Cambia password
+        </a>
+    </div>
 </div>
 {% endblock %}

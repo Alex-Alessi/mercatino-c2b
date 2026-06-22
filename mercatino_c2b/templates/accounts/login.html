@@ -3,18 +3,27 @@
 {% block title %}Accedi{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Accedi</h1>
+<div class="auth-wrapper">
+    <div class="card auth-card">
+        <h1>Accedi</h1>
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button class="button" type="submit">Accedi</button>
-    </form>
-    <p>
-        <a href="{% url 'password_reset' %}">
-            Password dimenticata?
-        </a>
-    </p>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="button" type="submit">Accedi</button>
+        </form>
+        <div class="auth-links">
+            <a href="{% url 'password_reset' %}">
+                Password dimenticata?
+            </a>
+
+            <span>
+                Non hai un account?
+                <a href="{% url 'register' %}">
+                    Registrati
+                </a>
+            </span>
+        </div>
+    </div>
 </div>
 {% endblock %}

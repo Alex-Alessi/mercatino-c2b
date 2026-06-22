@@ -82,7 +82,15 @@
         </div>
     {% empty %}
         <div class="card">
-            <p>Non hai ancora inviato nessuna proposta.</p>
+            <h2>Nessuna proposta trovata</h2>
+
+            {% if selected_status or search_query %}
+                <p>Nessuna proposta corrisponde ai filtri selezionati.</p>
+                <a class="button secondary" href="{% url 'dashboard' %}">Rimuovi filtri</a>
+            {% else %}
+                <p>Non hai ancora inviato nessuna proposta.</p>
+                <a class="button" href="{% url 'proposal_create' %}">Invia la tua prima proposta</a>
+            {% endif %}
         </div>
     {% endfor %}
 </div>

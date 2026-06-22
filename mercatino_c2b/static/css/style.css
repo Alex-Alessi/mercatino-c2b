@@ -2,11 +2,19 @@
     box-sizing: border-box;
 }
 
+main {
+    flex: 1;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: #f7f7f7;
     color: #222;
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
@@ -71,6 +79,22 @@ nav form {
     text-decoration: none;
     border: none;
     cursor: pointer;
+}
+
+.profile-info {
+    margin-top: 20px;
+}
+
+.profile-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.profile-label {
+    font-weight: bold;
+    color: #666;
 }
 
 .button.secondary {
@@ -148,6 +172,26 @@ select {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 16px;
+}
+
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+}
+
+.auth-links {
+    margin-top: 20px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .dashboard-proposal-thumb{
@@ -396,6 +440,34 @@ select {
 .active-nav {
     font-weight: 700;
     border-bottom: 2px solid currentColor;
+}
+
+.site-footer {
+    margin-top: 60px;
+    padding: 24px 0;
+    border-top: 1px solid #ddd;
+    background: #fff;
+}
+
+.site-footer .container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.site-footer p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.site-footer a {
+    color: #666;
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
 }
 
 
