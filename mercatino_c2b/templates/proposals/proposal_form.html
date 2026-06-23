@@ -3,10 +3,14 @@
 {% block title %}Nuova proposta{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Proponi un oggetto</h1>
+<div class="card proposal-card">
 
-    <form method="post" enctype="multipart/form-data">
+    <div class="page-header">
+        <h1>Proponi un oggetto</h1>
+        <p>Inserisci le informazioni dell'oggetto che vuoi mettere in vendita</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="proposal-form">
         {% csrf_token %}
         {% if form.errors %}
             <div class="form-error-box">
@@ -14,9 +18,105 @@
                 <p>Controlla i campi evidenziati.</p>
             </div>
         {% endif %}
-        {{ form.as_p }}
+
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Titolo</label>
+            {{ form.title }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Descrizione</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.requested_price.id_for_label }}">Prezzo richiesto (€)</label>
+            <div class="price-input">
+                <span>€</span>
+                {{ form.requested_price }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.images.id_for_label }}">Foto</label>
+            <div id="drop-zone">
+                Trascina qui le immagini oppure clicca per selezionarle
+                {{ form.images }}
+                <div id="image-count"></div>
+                <div id="preview-container"></div>
+            </div>
+            <small>Puoi selezionare più immagini tenendo premuto CTRL o SHIFT.</small>
+        </div>
 
         <button class="button" type="submit">Invia proposta</button>
     </form>
 </div>
+
+<script>
+    const preview = document.getElementById('preview-container');
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = dropZone.querySelector('input[type="file"]');
+
+    document.addEventListener('dragover', e => {
+        e.preventDefault();
+    });
+
+    document.addEventListener('drop', e => {
+        e.preventDefault();
+    });
+
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, e => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.add('dragging');
+        });
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, e => {
+            e.preventDefault();
+            e.stopPropagation();
+            dropZone.classList.remove('dragging');
+        });
+    });
+
+    dropZone.addEventListener('drop', e => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        fileInput.files = e.dataTransfer.files;
+
+        fileInput.dispatchEvent(
+            new Event('change', { bubbles: true })
+        );
+    });
+
+    fileInput.addEventListener('change', () => {
+        preview.innerHTML = '';
+        const count = fileInput.files.length;
+
+        document.getElementById('image-count').textContent =
+        count === 1
+            ? '1 immagine selezionata'
+            : `${count} immagini selezionate`;
+
+        [...fileInput.files].forEach(file => {
+            const reader = new FileReader();
+
+                reader.onload = e => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('preview-image');
+                    preview.appendChild(img);
+                };
+
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
 {% endblock %}

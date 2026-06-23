@@ -51,8 +51,8 @@ class ItemProposalForm(forms.ModelForm):
             if image.size > max_size:
                 raise forms.ValidationError("Ogni foto può pesare al massimo 5 MB.")
         
-        if image.content_type not in allowed_types:
-            raise forms.ValidationError("Puoi caricare solo immagini JPG, PNG o WEBP.")
+            if image.content_type not in allowed_types:
+                raise forms.ValidationError("Puoi caricare solo immagini JPG, PNG o WEBP.")
 
         return images
 
