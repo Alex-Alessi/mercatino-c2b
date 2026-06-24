@@ -42,9 +42,9 @@
             <div id="drop-zone">
                 Trascina qui le immagini oppure clicca per selezionarle
                 {{ form.images }}
-                <div id="image-count"></div>
-                <div id="preview-container"></div>
             </div>
+            <div id="image-count"></div>
+            <div id="preview-container"></div>
             <small>Puoi selezionare più immagini tenendo premuto CTRL o SHIFT.</small>
         </div>
 
@@ -56,6 +56,34 @@
     const preview = document.getElementById('preview-container');
     const dropZone = document.getElementById('drop-zone');
     const fileInput = dropZone.querySelector('input[type="file"]');
+
+    let selectedFiles = [];
+
+    function renderPreview() {
+        preview.innerHTML = '';
+
+        document.getElementById('image-count').textContent = selectedFiles.length === 1
+            ? '1 immagine selezionata'
+            : `${selectedFiles.length} immagini selezionate`;
+        
+        selectedFiles.forEach((file, index)=>{
+            const reader = new FileReader();
+
+            reader.onload = e => {
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('preview-wrapper');
+
+                wrapper.innerHTML = `
+                    <img src="${e.target.result}" class="preview-image">
+                    <button type="button" class="remove-image" data-index="${index}">×</button>
+                `;
+
+                preview.appendChild(wrapper);
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
 
     document.addEventListener('dragover', e => {
         e.preventDefault();
@@ -97,26 +125,28 @@
     });
 
     fileInput.addEventListener('change', () => {
-        preview.innerHTML = '';
-        const count = fileInput.files.length;
+        selectedFiles = [...fileInput.files];
+        renderPreview();
+    });
 
-        document.getElementById('image-count').textContent =
-        count === 1
-            ? '1 immagine selezionata'
-            : `${count} immagini selezionate`;
+    preview.addEventListener('click', e => {
+        if (!e.target.classList.contains('remove-image')) {
+            return;
+        }
 
-        [...fileInput.files].forEach(file => {
-            const reader = new FileReader();
+        const index = parseInt(e.target.dataset.index);
 
-                reader.onload = e => {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.classList.add('preview-image');
-                    preview.appendChild(img);
-                };
+        selectedFiles.splice(index, 1);
 
-            reader.readAsDataURL(file);
+        const dt = new DataTransfer();
+
+        selectedFiles.forEach(file => {
+            dt.items.add(file);
         });
+
+        fileInput.files = dt.files;
+
+        renderPreview();
     });
 </script>
 {% endblock %}
