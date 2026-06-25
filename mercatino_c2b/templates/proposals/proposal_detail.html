@@ -3,91 +3,63 @@
 {% block title %}{{ proposal.title }}{% endblock %}
 
 {% block content %}
-<div class="card"> <div class="proposal-layout">
+<div class="card"> 
+    <div class="proposal-layout">
 
-    <div class="proposal-main">
-        <h1>{{ proposal.title }}</h1>
+        <div class="proposal-gallery">
+            <div class="main-image">
+                {% with first_image=proposal.images.first %}
+                    {% if first_image %}
+                        <img
+                            id="main-image"
+                            src="{{ first_image.image.url }}"
+                            alt="{{ proposal.title }}">
+                    {% endif %}
+                {% endwith %}
+            </div>
 
-        {% if proposal.images.all %}
-            <h3>Foto</h3>
+            <div class="thumbnail-row">
 
-            {% with total_images=proposal.images.all|length %}
-                <div class="image-preview-grid">
-                    {% for image in proposal.images.all %}
-                        {% if forloop.counter <= 4 %}
-                            <div class="image-preview-wrapper">
-                                <img
-                                    class="image-preview clickable-image"
-                                    src="{{ image.image.url }}"
-                                    alt="{{ proposal.title }}"
-                                    data-full="{{ image.image.url }}"
-                                    data-gallery="proposal-{{ proposal.pk }}"
-                                    data-index="{{ forloop.counter0 }}"
-                                >
+                {% for image in proposal.images.all %}
+                <img
+                    class="thumbnail"
+                    src="{{ image.image.url }}"
+                    data-full="{{ image.image.url }}">
+                {% endfor %}
 
-                                {% if forloop.counter == 4 and total_images > 3 %}
-                                    <div class="image-overlay">
-                                        +{{ total_images|add:"-3" }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% else %}
-                            <img
-                                class="gallery-hidden clickable-image"
-                                src="{{ image.image.url }}"
-                                alt="{{ proposal.title }}"
-                                data-full="{{ image.image.url }}"
-                                data-gallery="proposal-{{ proposal.pk }}"
-                                data-index="{{ forloop.counter0 }}"
-                            >
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endwith %}
-        {% endif %}
+            </div>
 
-        <div class="proposal-description">
-            {{ proposal.description }}
         </div>
-    </div>
 
-    <div class="proposal-sidebar">
+        <div class="proposal-summary">
 
-        <div class="info-box">
-            <h3>Dettagli</h3>
+            <h1>{{ proposal.title }}</h1>
 
-            <p>
-                <strong>Stato</strong><br>
-                <span class="badge {{ proposal.status_badge_class }}">
-                    {{ proposal.get_status_display }}
-                </span>
-            </p>
+            <span class="badge {{ proposal.status_badge_class }}">
+                {{ proposal.get_status_display }}
+            </span>
 
             {% if proposal.requested_price %}
-                <p>
-                    <strong>Prezzo richiesto</strong><br>
-                    € {{ proposal.requested_price }}
-                </p>
+                <div class="price-box">
+                    <span>Prezzo richiesto</span>
+                    <strong>€ {{ proposal.requested_price }}</strong>
+                </div>
             {% endif %}
 
             {% if proposal.admin_offer %}
-                <p>
-                    <strong>Offerta ricevuta</strong><br>
-                    € {{ proposal.admin_offer }}
-                </p>
-            {% endif %}
-
-            {% if proposal.admin_offer and proposal.status == "offer_sent" %}
-                <form method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="accept_offer">
-                    <button class="button" type="submit">
-                        Accetta offerta
-                    </button>
-                </form>
+                <div class="offer-box">
+                    <span>Offerta ricevuta</span>
+                    <strong>€ {{ proposal.admin_offer }}</strong>
+                </div>
             {% endif %}
         </div>
     </div>
+</div>
+
+<div class="card">
+    <h2>Descrizione</h2>
+
+    <p>{{ proposal.description }}</p>
 </div>
 
 <div class="card">
