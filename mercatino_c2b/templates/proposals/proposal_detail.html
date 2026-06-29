@@ -12,7 +12,11 @@
                     {% if first_image %}
                         <img
                             id="main-image"
+                            class="clickable-image"
                             src="{{ first_image.image.url }}"
+                            data-full="{{ first_image.image.url }}"
+                            data-gallery="proposal-{{ proposal.pk }}"
+                            data-index="0"
                             alt="{{ proposal.title }}">
                     {% endif %}
                 {% endwith %}
@@ -24,7 +28,8 @@
                 <img
                     class="thumbnail"
                     src="{{ image.image.url }}"
-                    data-full="{{ image.image.url }}">
+                    data-full="{{ image.image.url }}"
+                    alt="{{ proposal.title }}">
                 {% endfor %}
 
             </div>
@@ -52,6 +57,18 @@
                     <strong>€ {{ proposal.admin_offer }}</strong>
                 </div>
             {% endif %}
+
+            {% if proposal.admin_offer and proposal.status == "offer_sent" %}
+                <form method="post" class="offer-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="accept_offer">
+
+                    <button class="button offer-button" type="submit">
+                        Accetta offerta
+                    </button>
+                </form>
+            {% endif %}
+            
         </div>
     </div>
 </div>
@@ -137,4 +154,36 @@
         <a class="button" href="{% url 'proposal_delete' proposal.pk %}">Elimina proposta</a>
     </div>
 {% endif %}
+<script>
+    const mainImage = document.getElementById("main-image");
+    const thumbnails = document.querySelectorAll(".thumbnail");
+
+    thumbnails.forEach((thumbnail, index) => {
+
+        if (index === 0) {
+            thumbnail.classList.add("active");
+        }
+
+        thumbnail.addEventListener("click", () => {
+
+            mainImage.style.opacity = "0";
+
+            setTimeout(() => {
+
+                mainImage.src = thumbnail.dataset.full;
+                mainImage.dataset.full = thumbnail.dataset.full;
+                mainImage.dataset.index = index;
+
+                mainImage.style.opacity = "1";
+
+            }, 120);
+
+            thumbnails.forEach(t => t.classList.remove("active"));
+
+            thumbnail.classList.add("active");
+
+        });
+
+    });
+</script>
 {% endblock %}
