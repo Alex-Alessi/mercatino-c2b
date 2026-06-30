@@ -73,6 +73,14 @@ def proposal_detail_view(request, pk):
     message_form = ProposalMessageForm()
     vinted_form = VintedLinkForm(instance=proposal)
 
+    other_proposals = (
+        ItemProposal.objects
+        .filter(user=proposal.user)
+        .exclude(pk=proposal.pk)
+        .exclude(status=ItemProposal.Status.REJECTED)
+        .order_by("-created_at")[:4]
+    )
+
     if request.method == "POST":
         action = request.POST.get("action")
 
@@ -141,6 +149,7 @@ def proposal_detail_view(request, pk):
             "proposal": proposal,
             "message_form": message_form,
             "vinted_form": vinted_form,
+            "other_proposals": other_proposals,
         },
     )
 

@@ -46,15 +46,15 @@
 
             {% if proposal.requested_price %}
                 <div class="price-box">
-                    <span>Prezzo richiesto</span>
-                    <strong>€ {{ proposal.requested_price }}</strong>
+                    <span class="info-label">Prezzo richiesto</span>
+                    <strong class="price">€ {{ proposal.requested_price }}</strong>
                 </div>
             {% endif %}
 
             {% if proposal.admin_offer %}
                 <div class="offer-box">
-                    <span>Offerta ricevuta</span>
-                    <strong>€ {{ proposal.admin_offer }}</strong>
+                    <span class="info-label">Offerta ricevuta</span>
+                    <strong class="offer-price">€ {{ proposal.admin_offer }}</strong>
                 </div>
             {% endif %}
 
@@ -79,8 +79,53 @@
     <p>{{ proposal.description }}</p>
 </div>
 
-<div class="card">
-    <h2>Messaggi</h2>
+{% if other_proposals %}
+    <div class="card">
+        <h2>Altre proposte dello stesso utente</h2>
+
+        <div class="other-proposals-carousel">
+
+            {% for other in other_proposals %}
+                <a class="other-proposal-card"
+                    href="{% url 'proposal_detail' other.pk %}">
+
+                    {% with first_image=other.images.first %}
+                        {% if first_image %}
+                            <img
+                                src="{{ first_image.image.url }}"
+                                alt="{{ other.title }}">
+                        {% endif %}
+                    {% endwith %}
+
+                    <div class="other-proposal-content">
+
+                        <h3 class="other-proposal-title">{{ other.title }}</h3>
+
+                        {% if other.requested_price %}
+                            <div class="other-proposal-price">
+                                € {{ other.requested_price }}
+                            </div>
+                        {% endif %}
+
+                        <span class="badge {{ other.status_badge_class }}">
+                            {{ other.get_status_display }}
+                        </span>
+
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<div id="chat-drawer" class="chat-drawer">
+    <div class="chat-header">
+        <h2>Messaggi</h2>
+
+        <button id="close-chat">
+            ✕
+        </button>
+    </div>
 
     <div class="chat-box">
         {% for message in proposal.messages.all %}
@@ -154,10 +199,28 @@
         <a class="button" href="{% url 'proposal_delete' proposal.pk %}">Elimina proposta</a>
     </div>
 {% endif %}
+
+<button id="chat-toggle" class="chat-fab">
+    💬
+</button>
+
 <script>
     const mainImage = document.getElementById("main-image");
     const thumbnails = document.querySelectorAll(".thumbnail");
+    const drawer = document.getElementById("chat-drawer");
 
+    const chatForm = document.querySelector(".chat-form");
+
+    chatForm.addEventListener("submit", () => {
+        sessionStorage.setItem("chatOpen", "true");
+    });
+
+    if (sessionStorage.getItem("chatOpen") === "true") {
+        drawer.classList.add("open");
+
+        sessionStorage.removeItem("chatOpen");
+    }
+    
     thumbnails.forEach((thumbnail, index) => {
 
         if (index === 0) {
@@ -183,6 +246,22 @@
             thumbnail.classList.add("active");
 
         });
+
+    });
+
+    document
+    .getElementById("chat-toggle")
+    .addEventListener("click", () => {
+
+        drawer.classList.add("open");
+
+    });
+
+    document
+    .getElementById("close-chat")
+    .addEventListener("click", () => {
+
+        drawer.classList.remove("open");
 
     });
 </script>
