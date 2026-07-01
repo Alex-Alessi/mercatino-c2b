@@ -211,12 +211,17 @@
 
     const chatForm = document.querySelector(".chat-form");
 
-    chatForm.addEventListener("submit", () => {
-        sessionStorage.setItem("chatOpen", "true");
-    });
+    if (chatForm) {
+        chatForm.addEventListener("submit", () => {
+            sessionStorage.setItem("chatOpen", "true");
+        });
+    }
 
     if (sessionStorage.getItem("chatOpen") === "true") {
         drawer.classList.add("open");
+
+        const chatBox = document.querySelector(".chat-box");
+        chatBox.scrollTop = chatBox.scrollHeight;
 
         sessionStorage.removeItem("chatOpen");
     }

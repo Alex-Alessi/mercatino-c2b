@@ -4,33 +4,38 @@
 
 {% block content %}
 
-<div class="card">
-    <h1>Proposte ricevute</h1>
+<div class="card staff-header">
+    <div class="staff-header-top">
+        <div>
+            <h1>Proposte ricevute</h1>
 
-    <p>Gestisci le proposte inviate dagli utenti</p>
+            <p>Gestisci le proposte inviate dagli utenti.</p>
 
-    <p>Proposte visualizzate: {{ proposals|length }}</p>
+            <span class="proposal-counter">
+                {{ proposals|length }} proposte visualizzate
+            </span>
+        </div>
 
-    <form method="get" class="filter-form">
-        <label for="status">Filtra per stato</label>
+        <form method="get" class="filter-form">
+            <label for="status">Stato</label>
 
-        <select name="status" id="status" onchange="this.form.submit()">
-            <option value="">Tutte</option>
+            <select name="status" id="status" onchange="this.form.submit()">
+                <option value="">Tutte</option>
 
-            {% for value, label in status_choices %}
-                <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>
-                    {{ label }}
-                </option>
-            {% endfor %}
-        </select>
-        {% comment %} <button type="submit">Filtra</button> {% endcomment %}
-    </form>
+                {% for value, label in status_choices %}
+                    <option value="{{ value }}" {% if selected_status == value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% comment %} <button type="submit">Filtra</button> {% endcomment %}
+        </form>
+    </div>
 </div>
 
 <div class="proposal-grid">
     {% for proposal in proposals %}
-        <div class="card">
-            <h2>{{ proposal.title }}</h2>
+        <div class="card staff-proposal-card">
 
             {% with first_image=proposal.images.first %}
                 {% if first_image %}
@@ -40,51 +45,38 @@
                 {% endif %}
             {% endwith %}
 
-            <p>Stato: 
+            <div class="staff-proposal-content">
+
+                <h2>{{ proposal.title }}</h2>
+
+                <p class="proposal-owner">
+                    {% if proposal.user.first_name or proposal.user.last_name %}
+                        <p>{{ proposal.user.first_name }} {{ proposal.user.last_name }}</p>
+                    {% else %}
+                        <p>{{ proposal.user.username }}</p>
+                    {% endif %}
+                </p>
+                
+                <div class="proposal-price">
+                    {% if proposal.requested_price %}
+                        € {{ proposal.requested_price }}</p>
+                    {% else %}
+                        Prezzo non indicato
+                    {% endif %}
+                </div>
+
                 <span class="badge {{ proposal.status_badge_class }}">
                     {{ proposal.get_status_display }}
                 </span>
-            </p>
 
-            {% if proposal.user.first_name or proposal.user.last_name %}
-                <p>Utente: {{ proposal.user.first_name }} {{ proposal.user.last_name }}</p>
-            {% else %}
-                <p>Utente: {{ proposal.user.username }}</p>
-            {% endif %}
-
-            {% if proposal.user.email %}
-                <p>Email: {{ proposal.user.email }}</p>
-            {% else %}
-                <p>Email: non disponibile</p>
-            {% endif %}
-
-            {% if proposal.user.profile.phone %}
-                <p>Telefono: {{ proposal.user.profile.phone }}</p>
-            {% else %}
-                <p>Telefono: non disponibile</p>
-            {% endif %}
-
-            {% if proposal.requested_price %}
-                <p>Prezzo richiesto: € {{ proposal.requested_price }}</p>
-            {% else %}
-                <p>Prezzo richiesto: non indicato</p>
-            {% endif %}
-
-            {% if proposal.admin_offer %}
-                <p>Offerta admin: € {{ proposal.admin_offer }}</p>
-            {% else %}
-                <p>Offerta admin: non ancora inviata</p>
-            {% endif %}
-
-            <p>Pubblicato il: {{ proposal.created_at|date:"d/m/Y H:i" }}</p>
-
-            <a class="button secondary" href="{% url 'staff_proposal_detail' proposal.pk %}">
-                Apri proposta
-            </a>
+                <a class="button secondary" href="{% url 'staff_proposal_detail' proposal.pk %}">
+                    Apri proposta
+                </a>
+            </div>
         </div>
     {% empty %}
         <div class="card">
-            <p>Non ci sono proposte.</p>
+            Nessuna proposta disponibile.
         </div>
     {% endfor %}
 </div>
