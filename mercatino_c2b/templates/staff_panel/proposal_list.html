@@ -35,45 +35,49 @@
 
 <div class="proposal-grid">
     {% for proposal in proposals %}
-        <div class="card staff-proposal-card">
+        <a href="{% url 'staff_proposal_detail' proposal.pk %}" class="card proposal-card-link">
 
-            {% with first_image=proposal.images.first %}
-                {% if first_image %}
-                    <img class="staff-proposal-thumb" src="{{ first_image.image.url }}" alt="{{ proposal.title }}">
-                {% else %}
-                    <p>Nessuna immagine caricata.</p>
-                {% endif %}
-            {% endwith %}
-
-            <div class="staff-proposal-content">
+            <div class="staff-card-content">
 
                 <h2>{{ proposal.title }}</h2>
 
-                <p class="proposal-owner">
-                    {% if proposal.user.first_name or proposal.user.last_name %}
-                        <p>{{ proposal.user.first_name }} {{ proposal.user.last_name }}</p>
+                {% with first_image=proposal.images.first %}
+                    {% if first_image %}
+                        <img class="dashboard-proposal-thumb" src="{{ first_image.image.url }}" alt="{{ proposal.title }}">
                     {% else %}
-                        <p>{{ proposal.user.username }}</p>
+                        <p>Nessuna immagine caricata.</p>
+                    {% endif %}
+                {% endwith %}
+
+                <>
+                    <strong>Utente:</strong>
+
+                    {% if proposal.user.first_name or proposal.user.last_name %}
+                        {{ proposal.user.first_name }} {{ proposal.user.last_name }}
+                    {% else %}
+                        {{ proposal.user.username }}
                     {% endif %}
                 </p>
-                
-                <div class="proposal-price">
-                    {% if proposal.requested_price %}
-                        € {{ proposal.requested_price }}</p>
-                    {% else %}
-                        Prezzo non indicato
-                    {% endif %}
-                </div>
 
-                <span class="badge {{ proposal.status_badge_class }}">
-                    {{ proposal.get_status_display }}
-                </span>
+                <p>
+                    Stato:
+                    <span class="badge {{ proposal.status_badge_class }}">
+                        {{ proposal.get_status_display }}
+                    </span>
+                </p>
+            
+                {% if proposal.requested_price %}
+                    <strong>Prezzo:</strong> € {{ proposal.requested_price }}
+                {% else %}
+                    <strong>Prezzo:</strong> Non indicato
+                {% endif %}
 
-                <a class="button secondary" href="{% url 'staff_proposal_detail' proposal.pk %}">
-                    Apri proposta
-                </a>
+                {% if proposal.admin_offer %}
+                    <p>Offerta inviata: € {{ proposal.admin_offer }}</p>
+                {% endif %}
+
             </div>
-        </div>
+        </a>
     {% empty %}
         <div class="card">
             Nessuna proposta disponibile.
