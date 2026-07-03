@@ -586,11 +586,16 @@ select {
     text-decoration: none;
     color: inherit;
     transition: .25s;
+    cursor: pointer;
 }
 
 .proposal-card-link:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0,0,0,.12);
+}
+
+.proposal-card-link h2 {
+    color: inherit;
 }
 
 .staff-card {

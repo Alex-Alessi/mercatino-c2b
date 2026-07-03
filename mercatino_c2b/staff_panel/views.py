@@ -5,24 +5,35 @@ from proposals.forms import ProposalMessageForm
 from django.contrib import messages
 from .forms import AdminOfferForm
 from proposals.utils import send_notification_email
+from django.db.models import Q
 
 
 # Create your views here.
 @login_required
 @user_passes_test(lambda user: user.is_staff)
 def staff_proposal_list_view(request):
-    selected_status = request.GET.get("status")
+    selected_status = request.GET.get("status", "")
+    search_query = request.GET.get("q", "").strip()
     
     proposals = ItemProposal.objects.all()
 
     if selected_status:
         proposals = proposals.filter(status=selected_status)
+    
+    if search_query:
+        proposals = proposals.filter(
+            Q(title__icontains=search_query) |
+            Q(user__username__icontains=search_query) |
+            Q(user__first_name__icontains=search_query) |
+            Q(user__last_name__icontains=search_query)
+        )
 
     proposals = proposals.order_by("-created_at")
 
     return render(request, "staff_panel/proposal_list.html", {
         "proposals": proposals,
         "selected_status": selected_status,
+        "search_query": search_query,
         "status_choices": ItemProposal.Status.choices,
     })
 

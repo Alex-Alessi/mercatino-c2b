@@ -17,9 +17,15 @@
         </div>
 
         <form method="get" class="filter-form">
-            <label for="status">Stato</label>
 
-            <select name="status" id="status" onchange="this.form.submit()">
+            <input
+                type="text"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Titolo o utente..."
+            >
+
+            <select name="status">
                 <option value="">Tutte</option>
 
                 {% for value, label in status_choices %}
@@ -28,7 +34,16 @@
                     </option>
                 {% endfor %}
             </select>
-            {% comment %} <button type="submit">Filtra</button> {% endcomment %}
+
+            <button class="button" type="submit">
+                Cerca
+            </button>
+
+            {% if selected_status or search_query %}
+                <a class="button secondary" href="{% url 'staff_proposal_list' %}">
+                    Reset
+                </a>
+            {% endif %}
         </form>
     </div>
 </div>
@@ -49,7 +64,7 @@
                     {% endif %}
                 {% endwith %}
 
-                <>
+                <p>
                     <strong>Utente:</strong>
 
                     {% if proposal.user.first_name or proposal.user.last_name %}
