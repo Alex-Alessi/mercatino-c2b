@@ -14,6 +14,7 @@ from django.db.models import Q
 def staff_proposal_list_view(request):
     selected_status = request.GET.get("status", "")
     search_query = request.GET.get("q", "").strip()
+    selected_sort = request.GET.get("sort", "-created_at")
     
     proposals = ItemProposal.objects.all()
 
@@ -28,13 +29,41 @@ def staff_proposal_list_view(request):
             Q(user__last_name__icontains=search_query)
         )
 
+    allowed_sort_fields = [
+        "created_at",
+        "-created_at",
+        "requested_price",
+        "-requested_price",
+        "title",
+        "-title",
+    ]
+
+    if selected_sort not in allowed_sort_fields:
+        selected_sort = "-created_at"
+
     proposals = proposals.order_by("-created_at")
+
+    status_stats = []
+
+    for value, label in ItemProposal.Status.choices:
+        status_stats.append({
+            "value": value,
+            "label": label,
+            "count": ItemProposal.objects.filter(status=value).count(),
+        })
+    
+    stats = {
+        "total": ItemProposal.objects.count(),
+        "status_stats": status_stats,
+    }
 
     return render(request, "staff_panel/proposal_list.html", {
         "proposals": proposals,
         "selected_status": selected_status,
         "search_query": search_query,
         "status_choices": ItemProposal.Status.choices,
+        "selected_sort": selected_sort,
+        "stats": stats,
     })
 
 @login_required

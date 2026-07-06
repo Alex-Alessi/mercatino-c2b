@@ -35,6 +35,32 @@
                 {% endfor %}
             </select>
 
+            <select name="sort">
+                <option value="-created_at" {% if selected_sort == "-created_at" %}selected{% endif %}>
+                    Più recenti
+                </option>
+
+                <option value="created_at" {% if selected_sort == "created_at" %}selected{% endif %}>
+                    Più vecchie
+                </option>
+
+                <option value="requested_price" {% if selected_sort == "requested_price" %}selected{% endif %}>
+                    Prezzo crescente
+                </option>
+
+                <option value="-requested_price" {% if selected_sort == "-requested_price" %}selected{% endif %}>
+                    Più decrescente
+                </option>
+
+                <option value="title" {% if selected_sort == "title" %}selected{% endif %}>
+                    Titolo A-Z
+                </option>
+
+                <option value="-title" {% if selected_sort == "-title" %}selected{% endif %}>
+                    Titolo Z-A
+                </option>
+            </select>
+
             <button class="button" type="submit">
                 Cerca
             </button>
@@ -46,6 +72,22 @@
             {% endif %}
         </form>
     </div>
+</div>
+
+<div class="staff-stats">
+
+    <a href="?q={{ search_query }}&sort={{ selected_sort }}" class="stat-card {% if not selected-status %}active{% endif %}">
+        <span class="stat-value">{{ stats.total }}</span>
+        <span class="stat-label">Totali</span>
+    </a>
+
+    {% for stat in stats.status_stats %}
+        <a href="?status={{ stat.value }}&q={{ search_query }}&sort={{ selected_sort }}" class="stat-card {% if selected_status == stat.value %}active{% endif %}">
+            <span class="stat-value">{{ stat.count }}</span>
+            <span class="stat-label">{{ stat.label }}</span>
+        </a>
+    {% endfor %}
+
 </div>
 
 <div class="proposal-grid">

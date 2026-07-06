@@ -582,6 +582,55 @@ select {
     min-width: 220px;
 }
 
+.staff-stats {
+    display: flex;
+    gap: .75rem;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: .8rem .5rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    transition: .2s;
+    text-decoration: none;
+    color: inherit;
+}
+
+.stat-card.active {
+    background: #1f2937;
+    color: white;
+}
+
+.stat-card.active .stat-label {
+    color: rgba(255,255,255,.8);
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,.12)
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.stat-label {
+    display: block;
+    margin-top: .35rem;
+    font-size: .8rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .proposal-card-link {
     text-decoration: none;
     color: inherit;
