@@ -15,16 +15,17 @@
 
         <nav>
             {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}"
-                class="{% if request.resolver_match.url_name == 'dashboard' %}active-nav{% endif %}">
-                    Dashboard
-                </a>
                 {% if user.is_staff %}
                     <a href="{% url 'staff_proposal_list' %}"
                     class="{% if request.resolver_match.url_name == 'staff_proposal_list' %}active-nav{% endif %}">
                         Proposte ricevute
                     </a>
                 {% else %}
+                    <a href="{% url 'dashboard' %}"
+                    class="{% if request.resolver_match.url_name == 'dashboard' %}active-nav{% endif %}">
+                        Dashboard
+                    </a>
+                    
                     <a href="{% url 'proposal_create' %}"
                     class="{% if request.resolver_match.url_name == 'proposal_create' %}active-nav{% endif %}">
                         Nuova proposta

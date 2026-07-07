@@ -946,6 +946,39 @@ select {
     align-items: start;
 }
 
+.customer-info{
+    margin:2rem 0;
+    padding-top:1.5rem;
+    border-top:1px solid #e8e8e8;
+}
+
+.customer-info h3{
+    margin:0 0 1rem;
+    font-size:1.1rem;
+}
+
+.info-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+
+    gap:1rem;
+
+    margin-bottom:.9rem;
+}
+
+.info-row .info-label{
+    color:#777;
+    font-weight:600;
+}
+
+.info-value{
+    text-align:right;
+    font-weight:500;
+
+    word-break:break-word;
+}
+
 @media (max-width: 700px) {
     .image-lightbox img {
         max-width: 92vw;

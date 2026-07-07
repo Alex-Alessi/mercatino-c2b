@@ -22,6 +22,9 @@ def dashboard_view(request):
             title__icontains=search_query
         )
     
+    if request.user.is_staff:
+        return redirect("staff_proposal_list")
+    
     proposals = proposals.order_by("created_at")
 
     return render(

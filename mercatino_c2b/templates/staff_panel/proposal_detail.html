@@ -3,108 +3,134 @@
 {% block title %}{{ proposal.title }}{% endblock %}
 
 {% block content %}
-{% if proposal.status != "rejected" and proposal.status != "completed" %}
-    <div class="card">
-        <h2>Trattativa</h2>
-        {% if proposal.status == "under_review" %}
-            <form method="post">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="mark_negotiation">
-                <button class="button" type="submit">Metti in trattativa</button>
-            </form>
-        {% endif %}
-
-        {% if proposal.status != "rejected" and proposal.status != "completed" %}
-            <form method="post" style="margin-top:15px">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="reject">
-                <button class="button" type="submit">Rifiuta proposta</button>
-            </form>
-        {% endif %}
-        
-        {% if proposal.status == "vinted_link_sent" %}
-            <form method="post" style="margin-top:15px">
-                {% csrf_token %}
-                <input type="hidden" name="action" value="complete">
-                <button class="button" type="submit">Segna completato</button>
-            </form>
-        {% endif %}
-    </div>
-{% endif %}
 
 <div class="card">
-    <h1>{{ proposal.title }}</h1>
+    <div class="proposal-layout">
 
-    <p>
-        Stato:
-        <span class="badge {{ proposal.status_badge_class }}">{{ proposal.get_status_display }}</span>
-    </p>
-
-    <h3>Utente</h3>
-
-    {% if proposal.user.first_name or proposal.user.last_name %}
-        <p>Nome: {{ proposal.user.first_name }} {{ proposal.user.last_name }}</p>
-    {% else %}
-        <p>Nome: {{ proposal.user.username }}</p>
-    {% endif %}
-
-    {% if proposal.user.email %}
-        <p>Email: {{ proposal.user.email }}</p>
-    {% else %}
-        <p>Email: non disponibile</p>
-    {% endif %}
-
-    {% if proposal.user.profile.phone %}
-        <p>Telefono: {{ proposal.user.profile.phone }}</p>
-    {% else %}
-        <p>Telefono: non disponibile</p>
-    {% endif %}
-
-    <p>{{ proposal.description }}</p>
-
-    {% if proposal.requested_price %}
-        <p>Prezzo richiesto: € {{ proposal.requested_price }}</p>
-    {% endif %}
-
-    {% if proposal.admin_offer %}
-        <p><strong>Offerta ricevuta:</strong> € {{ proposal.admin_offer }}</p>
-    {% endif %}
-
-    {% if proposal.images.all %}
-        <h3>Foto</h3>
-        {% with total_images=proposal.images.all|length %}
-            <div class="image-preview-grid">
-                {% for image in proposal.images.all %}
-                    {% if forloop.counter <= 4 %}
-                        <div class="image-preview-wrapper">
-                            <img 
-                                class="image-preview clickable-image" 
-                                src="{{ image.image.url }}" 
-                                alt="{{ proposal.title }}" 
-                                data-full="{{ image.image.url }}"
-                                data-gallery="proposal-{{ proposal.pk }}"
-                                data-index="{{ forloop.counter0 }}"
-                                >
-                            {% if forloop.counter == 4 and total_images > 3 %}
-                                <div class="image-overlay">
-                                    +{{ total_images|add:"-3" }}
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% else %}
-                        <img 
-                            class="gallery-hidden clickable-image" 
-                            src="{{ image.image.url }}" 
-                            alt="{{ proposal.title }}" 
-                            data-full="{{ image.image.url }}"
+        <div class="proposal-gallery">
+            <div class="main-image">
+                {% with first_image=proposal.images.first %}
+                    {% if first_image %}
+                        <img
+                            id="main-image"
+                            class="clickable-image"
+                            src="{{ first_image.image.url }}"
+                            data-full="{{ first_image.image.url }}"
                             data-gallery="proposal-{{ proposal.pk }}"
-                            data-index="{{ forloop.counter0 }}"
-                            >
+                            data-index="0"
+                            alt="{{ proposal.title }}">
                     {% endif %}
-                {% endfor %}
+                {% endwith %}
             </div>
-        {% endwith %}
-    {% endif %}
+
+            <div class="thumbnail-row">
+
+                {% for image in proposal.images.all %}
+                <img
+                    class="thumbnail"
+                    src="{{ image.image.url }}"
+                    data-full="{{ image.image.url }}"
+                    alt="{{ proposal.title }}">
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <div class="proposal-summary">
+
+            <h1>{{ proposal.title }}</h1>
+
+            <span class="badge {{ proposal.status_badge_class }}">
+                {{ proposal.get_status_display }}
+            </span>
+
+            {% if proposal.requested_price %}
+                <div class="price-box">
+                    <span class="info-label">Prezzo richiesto</span>
+                    <strong class="price">€ {{ proposal.requested_price }}</strong>
+                </div>
+            {% endif %}
+
+            {% if proposal.admin_offer %}
+                <div class="offer-box">
+                    <span class="info-label">Offerta inviata</span>
+                    <strong class="offer-price">€ {{ proposal.admin_offer }}</strong>
+                </div>
+            {% endif %}
+
+            <div class="customer-info">
+
+                <h3>Cliente</h3>
+
+                <div class="info-row">
+                    <span class="info-label">Nome</span>
+
+                    <span class="info-value">
+                        {% if proposal.user.first_name or proposal.user.last_name %}
+                            {{ proposal.user.first_name }} {{ proposal.user.last_name }}
+                        {% else %}
+                            {{ proposal.user.username }}
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Email</span>
+
+                    <span class="info-value">
+                        {{ proposal.user.email|default:"Non disponibile" }}
+                    </span>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Telefono</span>
+
+                    <span class="info-value">
+                        {{ proposal.user.profile.phone|default:"Non disponibile" }}
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="staff-actions">
+                {% if proposal.status == "under_review" %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="mark_negotiation">
+
+                        <button class="button" type="submit">
+                            Metti in trattativa
+                        </button>
+                    </form>
+                {% endif %}
+
+                {% if proposal.status != "rejected" and proposal.status != "completed" %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="reject">
+
+                        <button class="button secondary" type="submit">
+                            Rifiuta proposta
+                        </button>
+                    </form>
+                {% endif %}
+
+                {% if proposal.status == "vinted_link_sent" %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="complete">
+
+                        <button class="button" type="submit">
+                            Segna completata
+                        </button>
+                    </form>
+                {% endif %}
+
+            </div>
+            
+        </div>
+    </div>
 </div>
 
 <div class="card">
