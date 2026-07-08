@@ -24,7 +24,6 @@
             </div>
 
             <div class="thumbnail-row">
-
                 {% for image in proposal.images.all %}
                 <img
                     class="thumbnail"
@@ -32,9 +31,12 @@
                     data-full="{{ image.image.url }}"
                     alt="{{ proposal.title }}">
                 {% endfor %}
-
             </div>
 
+            <div class="proposal-description">
+                <h2>Descrizione</h2>
+                <p>{{ proposal.description }}</p>
+            </div>
         </div>
 
         <div class="proposal-summary">
@@ -58,6 +60,25 @@
                     <strong class="offer-price">€ {{ proposal.admin_offer }}</strong>
                 </div>
             {% endif %}
+
+            <div class="offer-section">
+                <h3>Offerta</h3>
+
+                {% if proposal.status == "offer_accepted" or proposal.status == "vinted_link_sent" or proposal.status == "completed" %}
+                    <p>Questa offerta non è più modificabile.</p>
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="action" value="send_offer">
+
+                        {{ offer_form.as_p }}
+
+                        <button class="button" type="submit">
+                            Invia offerta
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
 
             <div class="customer-info">
 
@@ -133,30 +154,14 @@
     </div>
 </div>
 
-<div class="card">
-    <h2>Offerta admin</h2>
+<div id="chat-drawer" class="chat-drawer">
+    <div class="chat-header">
+        <h2>Messaggi</h2>
 
-    {% if proposal.status == "offer_accepted" or proposal.status == "vinted_link_sent" or proposal.status == "completed" %}
-        {% if proposal.admin_offer %}
-            <p><strong>Offerta inviata:</strong> € {{ proposal.admin_offer }}</p>
-        {% else %}
-            <p>Nessuna offerta inserita.</p>
-        {% endif %}
-
-        <p>Questa offerta non è più modificabile perché la trattativa è già avanzata.</p>
-    {% else %}
-        <form method="post">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="send_offer">
-            {{ offer_form.as_p }}
-
-            <button class="button" type="submit">Invia offerta</button>
-        </form>
-    {% endif %}
-</div>
-
-<div class="card">
-    <h2>Messaggi</h2>
+        <button id="close-chat">
+            ✕
+        </button>
+    </div>
 
     <div class="chat-box">
         {% for message in proposal.messages.all %}
@@ -166,6 +171,7 @@
                         <div class="chat-meta">
                             Tu · {{ message.created_at|date:"d/m/Y H:i" }}
                         </div>
+
                         <div class="chat-text">
                             {{ message.body }}
                         </div>
@@ -177,6 +183,7 @@
                         <div class="chat-meta">
                             {{ message.sender.username }} · {{ message.created_at|date:"d/m/Y H:i" }}
                         </div>
+
                         <div class="chat-text">
                             {{ message.body }}
                         </div>
@@ -191,9 +198,12 @@
     <form method="post" class="chat-form">
         {% csrf_token %}
         <input type="hidden" name="action" value="send_message">
+
         {{ message_form.body }}
 
-        <button class="button"  type="submit"> Invia </button>
+        <button class="button" type="submit">
+            Invia
+        </button>
     </form>
 </div>
 
@@ -207,4 +217,43 @@
         </p>
     </div>
 {% endif %}
+
+<button id="chat-toggle" class="chat-fab">
+    💬
+</button>
+
+<script>
+
+const mainImage = document.getElementById("main-image");
+const thumbnails = document.querySelectorAll(".thumbnail");
+
+thumbnails.forEach((thumbnail, index) => {
+
+    if (index === 0) {
+        thumbnail.classList.add("active");
+    }
+
+    thumbnail.addEventListener("click", () => {
+
+        mainImage.style.opacity = "0";
+
+        setTimeout(() => {
+
+            mainImage.src = thumbnail.dataset.full;
+            mainImage.dataset.full = thumbnail.dataset.full;
+            mainImage.dataset.index = index;
+
+            mainImage.style.opacity = "1";
+
+        }, 120);
+
+        thumbnails.forEach(t => t.classList.remove("active"));
+
+        thumbnail.classList.add("active");
+
+    });
+
+});
+
+</script>
 {% endblock %}
