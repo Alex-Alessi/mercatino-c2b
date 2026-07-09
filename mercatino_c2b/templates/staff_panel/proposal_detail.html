@@ -154,58 +154,7 @@
     </div>
 </div>
 
-<div id="chat-drawer" class="chat-drawer">
-    <div class="chat-header">
-        <h2>Messaggi</h2>
-
-        <button id="close-chat">
-            ✕
-        </button>
-    </div>
-
-    <div class="chat-box">
-        {% for message in proposal.messages.all %}
-            {% if message.sender == request.user %}
-                <div class="chat-row chat-row-own">
-                    <div class="chat-bubble chat-bubble-own">
-                        <div class="chat-meta">
-                            Tu · {{ message.created_at|date:"d/m/Y H:i" }}
-                        </div>
-
-                        <div class="chat-text">
-                            {{ message.body }}
-                        </div>
-                    </div>
-                </div>
-            {% else %}
-                <div class="chat-row chat-row-other">
-                    <div class="chat-bubble chat-bubble-other">
-                        <div class="chat-meta">
-                            {{ message.sender.username }} · {{ message.created_at|date:"d/m/Y H:i" }}
-                        </div>
-
-                        <div class="chat-text">
-                            {{ message.body }}
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        {% empty %}
-            <p>Non ci sono ancora messaggi.</p>
-        {% endfor %}
-    </div>
-
-    <form method="post" class="chat-form">
-        {% csrf_token %}
-        <input type="hidden" name="action" value="send_message">
-
-        {{ message_form.body }}
-
-        <button class="button" type="submit">
-            Invia
-        </button>
-    </form>
-</div>
+{% include "components/chat_drawer.html" %}
 
 {% if proposal.vinted_url %}
     <div class="card">
@@ -226,6 +175,15 @@
 
 const mainImage = document.getElementById("main-image");
 const thumbnails = document.querySelectorAll(".thumbnail");
+const drawer = document.getElementById("chat-drawer");
+const chatForm = document.querySelector(".chat-form");
+const chatBox = document.querySelector(".chat-box");
+
+function scrollChatToBottom() {
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+}
 
 thumbnails.forEach((thumbnail, index) => {
 
@@ -254,6 +212,28 @@ thumbnails.forEach((thumbnail, index) => {
     });
 
 });
+
+if (drawer && chatForm) {
+
+        chatForm.addEventListener("submit", () => {
+            sessionStorage.setItem("chatOpen", "true");
+        });
+
+        if(sessionStorage.getItem("chatOpen") === "true"){
+            drawer.classList.add("open");
+            scrollChatToBottom();
+            sessionStorage.removeItem("chatOpen");
+        }
+
+        document.getElementById("chat-toggle").addEventListener("click", () => {
+            drawer.classList.add("open");
+            scrollChatToBottom();
+        });
+
+        document.getElementById("close-chat").addEventListener("click", () => {
+            drawer.classList.remove("open");
+        })
+    } 
 
 </script>
 {% endblock %}

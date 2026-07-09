@@ -101,6 +101,8 @@ class ProposalMessage(models.Model):
     )
     body = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
+    seen_by_staff = models.BooleanField(default=False)
+    seen_by_user = models.BooleanField(default=False)
 
     class Meta:
         ordering = ["created_at"]

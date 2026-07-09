@@ -41,7 +41,13 @@ def staff_proposal_list_view(request):
     if selected_sort not in allowed_sort_fields:
         selected_sort = "-created_at"
 
-    proposals = proposals.order_by("-created_at")
+    proposals = proposals.order_by(selected_sort)
+
+    for proposal in proposals:
+        proposal.unread_messages = proposal.messages.filter(
+            sender=proposal.user,
+            seen_by_staff=False,
+        ).count()
 
     status_stats = []
 
@@ -70,6 +76,7 @@ def staff_proposal_list_view(request):
 @user_passes_test(lambda user: user.is_staff)
 def staff_proposal_detail_view(request, pk):
     proposal = get_object_or_404(ItemProposal, pk=pk)
+    proposal.messages.filter(sender=proposal.user, seen_by_staff=False).update(seen_by_staff=True)
     message_form = ProposalMessageForm()
     offer_form = AdminOfferForm(instance=proposal)
 
@@ -83,6 +90,8 @@ def staff_proposal_detail_view(request, pk):
                 message = message_form.save(commit=False)
                 message.proposal = proposal
                 message.sender = request.user
+                message.seen_by_staff = True
+                message.seen_by_user = False
                 message.save()
 
                 if proposal.user.email:

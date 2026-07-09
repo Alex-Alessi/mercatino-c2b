@@ -27,6 +27,13 @@ def dashboard_view(request):
     
     proposals = proposals.order_by("created_at")
 
+    for proposal in proposals:
+        proposal.unread_messages = proposal.messages.exclude(
+            sender=request.user
+        ).filter(
+            seen_by_user=False
+        ).count()
+
     return render(
         request,
         "proposals/dashboard.html",
@@ -72,7 +79,8 @@ def proposal_create_view(request):
 @login_required
 def proposal_detail_view(request, pk):
     proposal = get_object_or_404(ItemProposal, pk=pk, user=request.user)
-        
+    proposal.messages.exclude(sender=request.user).filter(seen_by_user=False).update(seen_by_user=True)
+
     message_form = ProposalMessageForm()
     vinted_form = VintedLinkForm(instance=proposal)
 
@@ -93,6 +101,8 @@ def proposal_detail_view(request, pk):
                 message = message_form.save(commit=False)
                 message.proposal = proposal
                 message.sender = request.user
+                message.seen_by_user = True
+                message.seen_by_staff = False
                 message.save()
 
                 messages.success(request, "Messaggio inviato.")

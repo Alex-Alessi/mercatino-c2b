@@ -113,12 +113,17 @@
                     {% endif %}
                 </p>
 
-                <p>
-                    Stato:
+                <div class="proposal-badges">
                     <span class="badge {{ proposal.status_badge_class }}">
                         {{ proposal.get_status_display }}
                     </span>
-                </p>
+
+                    {% if proposal.unread_messages %}
+                        <span class="badge badge-red">
+                            💬 {{ proposal.unread_messages }} nuovo{% if proposal.unread_messages > 1 %}i{% endif %}
+                        </span>
+                    {% endif %}
+                </div>
             
                 {% if proposal.requested_price %}
                     <strong>Prezzo:</strong> € {{ proposal.requested_price }}
