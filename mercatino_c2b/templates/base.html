@@ -19,11 +19,23 @@
                     <a href="{% url 'staff_proposal_list' %}"
                     class="{% if request.resolver_match.url_name == 'staff_proposal_list' %}active-nav{% endif %}">
                         Proposte ricevute
+
+                        {% if unread_messages_count %}
+                            <span class="nav-badge">
+                                {{ unread_messages_count }}
+                            </span>
+                        {% endif %}
                     </a>
                 {% else %}
                     <a href="{% url 'dashboard' %}"
                     class="{% if request.resolver_match.url_name == 'dashboard' %}active-nav{% endif %}">
                         Dashboard
+
+                        {% if unread_messages_count %}
+                            <span class="nav-notification">
+                                {{ unread_messages_count }}
+                            </span>
+                        {% endif %}
                     </a>
                     
                     <a href="{% url 'proposal_create' %}"
