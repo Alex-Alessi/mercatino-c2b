@@ -3,7 +3,7 @@
 {% block title %}Profilo{% endblock %}
 
 {% block content %}
-<div class="card">
+<div class="card" style="width:25rem">
     <h1>👤 Profilo</h1>
 
     <div class="profile-info">
@@ -31,6 +31,16 @@
             <span class="profile-label">Registrato il</span>
             <span>{{ request.user.date_joined|date:"d/m/Y" }}</span>
         </div>
+
+        <div class="profile-row">
+            <span class="profile-label">Badge</span>
+            <span>{{ request.user.profile.seller_badge }}</span>
+        </div>
+
+        <div class="profile-row">
+            <span class="profile-label">Vendite concluse</span>
+            <span>{{ request.user.profile.completed_sales }}</span>
+        </div> 
     </div>
 
     <div style="margin-top: 20px;">

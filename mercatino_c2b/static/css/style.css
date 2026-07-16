@@ -1020,10 +1020,33 @@ select {
 }
 
 .info-value{
-    text-align:right;
     font-weight:500;
-
     word-break:break-word;
+    flex-direction: column; 
+    align-items: flex-end;
+}
+
+.seller-badge {
+    display: inline-block;
+    width: 140px;
+    margin-top: 4px;
+    padding: 2px 8px;
+    font-size: .8rem;
+    font-weight: 600;
+    color: #7a5c00;
+    background: #fff4cc;
+    border-radius: 999px;
+    height: 24px;
+}
+
+.seller-tooltip{
+    opacity:0;
+    visibility:hidden;
+}
+
+.seller-badge:hover .seller-tooltip{
+    opacity:1;
+    visibility:visible;
 }
 
 @media (max-width: 700px) {

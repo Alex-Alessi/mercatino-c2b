@@ -111,6 +111,16 @@
                     {% else %}
                         {{ proposal.user.username }}
                     {% endif %}
+
+                    <br>
+
+                    <span class="seller-badge">
+                        {{ proposal.user.profile.seller_badge }}
+
+                        <span class="seller-tooltip">
+                            {{ proposal.user.profile.completed_sales }} trattative concluse
+                        </span>
+                    </span>
                 </p>
 
                 <div class="proposal-badges">
