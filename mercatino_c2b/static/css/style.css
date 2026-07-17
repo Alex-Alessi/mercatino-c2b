@@ -1026,22 +1026,55 @@ select {
     align-items: flex-end;
 }
 
-.seller-badge {
+.seller-info{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    margin:12px 0;
+}
+
+.seller-info strong{
+    font-size:1rem;
+}
+
+.seller-badge{
+    position: relative;
     display: inline-block;
-    width: 140px;
-    margin-top: 4px;
-    padding: 2px 8px;
-    font-size: .8rem;
+    margin-top: 3px;
+    font-size: .75rem;
     font-weight: 600;
-    color: #7a5c00;
-    background: #fff4cc;
+    color: #8b7a00;
+    background: #f8f2cf;
     border-radius: 999px;
-    height: 24px;
+    width: fit-content;
+    cursor: help;
 }
 
 .seller-tooltip{
-    opacity:0;
-    visibility:hidden;
+    position: absolute;
+
+    left: 50%;
+    bottom: calc(100% + 8px);
+
+    transform: translateX(-50%);
+
+    min-width: max-content;
+
+    padding: 8px 12px;
+
+    background: #222;
+    color: #fff;
+
+    border-radius: 8px;
+
+    font-size: .8rem;
+    font-weight: 400;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition: .2s ease;
+    z-index: 100;
 }
 
 .seller-badge:hover .seller-tooltip{

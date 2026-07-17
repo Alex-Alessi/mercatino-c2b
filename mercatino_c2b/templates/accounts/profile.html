@@ -33,14 +33,26 @@
         </div>
 
         <div class="profile-row">
-            <span class="profile-label">Badge</span>
-            <span>{{ request.user.profile.seller_badge }}</span>
-        </div>
+            <span class="profile-label">Reputazione</span>
 
-        <div class="profile-row">
-            <span class="profile-label">Vendite concluse</span>
-            <span>{{ request.user.profile.completed_sales }}</span>
-        </div> 
+            <span class="seller-badge">
+                {{ request.user.profile.seller_badge }}
+
+                <span class="seller-tooltip">
+                    {{ request.user.profile.completed_sales }} trattative concluse
+
+                    {% if request.user.profile.next_badge_progress %}
+                        <br><br>
+                        Ti mancano {{ request.user.profile.next_badge_progress.remaining }}
+                        trattative per diventare
+                        <strong>{{ request.user.profile.next_badge_progress.next_badge }}</strong>
+                    {% else %}
+                        <br><br>
+                        Hai raggiunto il livello massimo!
+                    {% endif %}
+                </span>
+            </span>
+        </div>
     </div>
 
     <div style="margin-top: 20px;">

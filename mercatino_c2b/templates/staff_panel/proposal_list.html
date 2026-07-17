@@ -103,16 +103,14 @@
                     {% endif %}
                 {% endwith %}
 
-                <p>
-                    <strong>Utente:</strong>
-
-                    {% if proposal.user.first_name or proposal.user.last_name %}
-                        {{ proposal.user.first_name }} {{ proposal.user.last_name }}
-                    {% else %}
-                        {{ proposal.user.username }}
-                    {% endif %}
-
-                    <br>
+                <div class="seller-info">
+                    <strong>
+                        {% if proposal.user.first_name or proposal.user.last_name %}
+                            {{ proposal.user.first_name }} {{ proposal.user.last_name }}
+                        {% else %}
+                            {{ proposal.user.username }}
+                        {% endif %}
+                    </strong>
 
                     <span class="seller-badge">
                         {{ proposal.user.profile.seller_badge }}
@@ -121,7 +119,7 @@
                             {{ proposal.user.profile.completed_sales }} trattative concluse
                         </span>
                     </span>
-                </p>
+                </div>
 
                 <div class="proposal-badges">
                     <span class="badge {{ proposal.status_badge_class }}">
