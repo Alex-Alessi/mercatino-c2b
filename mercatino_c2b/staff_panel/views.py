@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
-from proposals.models import ItemProposal
+from proposals.models import ItemProposal, ProposalEvent
 from proposals.forms import ProposalMessageForm
 from django.contrib import messages
 from .forms import AdminOfferForm
@@ -118,6 +118,11 @@ def staff_proposal_detail_view(request, pk):
                 proposal.offer_seen_by_user = False
                 proposal.save(update_fields=["admin_offer", "status", "offer_seen_by_user", "updated_at"])
 
+                ProposalEvent.objects.create(
+                    proposal=proposal,
+                    event_type=ProposalEvent.EventType.OFFER_SENT,
+                )
+
                 if proposal.user.email:
                     send_notification_email(
                         subject="Hai ricevuto una nuova offerta",
@@ -137,12 +142,22 @@ def staff_proposal_detail_view(request, pk):
             proposal.status = ItemProposal.Status.NEGOTIATION
             proposal.save(update_fields=["status"])
 
+            ProposalEvent.objects.create(
+                proposal=proposal,
+                event_type=ProposalEvent.EventType.NEGOTIATION,
+            )
+
             messages.success(request, "Proposta messa in trattativa.")
             return redirect("staff_proposal_detail", pk=proposal.pk)
         
         elif action == "reject":
             proposal.status = ItemProposal.Status.REJECTED
             proposal.save(update_fields=["status"])
+
+            ProposalEvent.objects.create(
+                proposal=proposal,
+                event_type=ProposalEvent.EventType.REJECTED,
+            )
 
             if proposal.user.email:
                 send_notification_email(
@@ -162,6 +177,11 @@ def staff_proposal_detail_view(request, pk):
         elif action == "complete":
             proposal.status = ItemProposal.Status.COMPLETED
             proposal.save(update_fields=["status"])
+
+            ProposalEvent.objects.create(
+                proposal=proposal,
+                event_type=ProposalEvent.EventType.COMPLETED,
+            )
 
             messages.success(request, "Proposta completata.")
             return redirect("staff_proposal_detail", pk=proposal.pk)

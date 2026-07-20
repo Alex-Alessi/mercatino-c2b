@@ -11,7 +11,6 @@ class ItemProposal(models.Model):
         NEGOTIATION = "negotiation", "In trattativa"
         OFFER_SENT = "offer_sent", "Offerta inviata"
         OFFER_ACCEPTED = "offer_accepted", "Offerta accettata"
-        WAITING_VINTED_LINK = "waiting_vinted_link", "In attesa link Vinted"
         VINTED_LINK_SENT = "vinted_link_sent", "Link Vinted inviato"
         COMPLETED = "completed", "Completato"
         REJECTED = "rejected", "Rifiutato"
@@ -43,13 +42,11 @@ class ItemProposal(models.Model):
     vinted_url = models.URLField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
     offer_seen_by_user = models.BooleanField(default=False)
 
     def can_user_send_vinted_link(self):
-        return self.status in [
-            self.Status.OFFER_ACCEPTED,
-            self.Status.WAITING_VINTED_LINK,
-        ]
+        return self.status == self.Status.OFFER_ACCEPTED
     
     @property
     def status_badge_class(self):
@@ -58,7 +55,6 @@ class ItemProposal(models.Model):
             self.Status.NEGOTIATION: "badge-blue",
             self.Status.OFFER_SENT: "badge-purple",
             self.Status.OFFER_ACCEPTED: "badge-green",
-            self.Status.WAITING_VINTED_LINK: "badge-orange",
             self.Status.VINTED_LINK_SENT: "badge-orange",
             self.Status.COMPLETED: "badge-green",
             self.Status.REJECTED: "badge-red",
@@ -75,6 +71,35 @@ class ItemProposal(models.Model):
 
     def __str__(self):
         return self.title
+    
+class ProposalEvent(models.Model):
+    class EventType(models.TextChoices):
+        CREATED = "created", "Proposta inviata"
+        NEGOTIATION = "negotiation", "Messa in trattativa"
+        OFFER_SENT = "offer_sent", "Offerta inviata"
+        OFFER_ACCEPTED = "offer_accepted", "Offerta accettata"
+        VINTED_LINK_SENT = "vinted_link_sent", "Link Vinted inviato"
+        COMPLETED = "completed", "Proposta completata"
+        REJECTED = "rejected", "Proposta rifiutata"
+
+    proposal = models.ForeignKey(
+        ItemProposal,
+        on_delete=models.CASCADE,
+        related_name="events",
+    )
+
+    event_type = models.CharField(
+        max_length=30,
+        choices=EventType.choices,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.get_event_type_display()} - {self.proposal.title}"
 
 
 class ProposalImage(models.Model):

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import ItemProposalForm, ProposalMessageForm, VintedLinkForm
-from .models import ItemProposal, ProposalImage, ProposalMessage
+from .models import ItemProposal, ProposalImage, ProposalMessage, ProposalEvent
 from proposals.utils import (send_notification_email, get_staff_emails,)
 
 # Create your views here.
@@ -55,6 +55,11 @@ def proposal_create_view(request):
             proposal = form.save(commit=False)
             proposal.user = request.user
             proposal.save()
+
+            ProposalEvent.objects.create(
+                proposal=proposal,
+                event_type=ProposalEvent.EventType.CREATED,
+            )
 
             images = request.FILES.getlist("images")
             for image in images:
@@ -119,6 +124,11 @@ def proposal_detail_view(request, pk):
                 proposal.status = ItemProposal.Status.VINTED_LINK_SENT
                 proposal.save()
 
+                ProposalEvent.objects.create(
+                    proposal=proposal,
+                    event_type=ProposalEvent.EventType.VINTED_LINK_SENT,
+                )
+
                 staff_emails = get_staff_emails()
 
                 if staff_emails:
@@ -147,6 +157,11 @@ def proposal_detail_view(request, pk):
             
             proposal.status = ItemProposal.Status.OFFER_ACCEPTED
             proposal.save(update_fields=["status"])
+
+            ProposalEvent.objects.create(
+                proposal=proposal,
+                event_type=ProposalEvent.EventType.OFFER_ACCEPTED,
+            )
 
             messages.success(request, "Offerta accettata. Ora puoi inserire il link dell'annuncio.")
             return redirect("proposal_detail", pk=proposal.pk)
