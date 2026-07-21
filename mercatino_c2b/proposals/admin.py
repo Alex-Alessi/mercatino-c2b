@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ItemProposal, ProposalImage, ProposalMessage
+from .models import ItemProposal, ProposalImage, ProposalMessage, ProposalEvent
 
 # Register your models here.
 
@@ -99,3 +99,23 @@ class ProposalImageAdmin(admin.ModelAdmin):
 class ProposalMessageAdmin(admin.ModelAdmin):
     list_display = ["proposal", "sender", "created_at"]
     search_fields = ["body", "sender__username", "proposal__title"]
+
+@admin.register(ProposalEvent)
+class ProposalEventAdmin(admin.ModelAdmin):
+    list_display = (
+        "proposal",
+        "event_type",
+        "created_at",
+    )
+
+    list_filter = (
+        "event_type",
+        "created_at",
+    )
+
+    search_fields = (
+        "proposal__title",
+        "proposal__user__username",
+    )
+
+    ordering = ("-created_at",)

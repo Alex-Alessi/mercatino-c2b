@@ -121,7 +121,7 @@
 {% include "components/chat_drawer.html" %}
 
 {% if proposal.can_user_send_vinted_link %}
-    <div class="card">
+    <div class="card" id="vinted-form-card">
         <h2>Invia link annuncio</h2>
         <p>
             Crea l'annuncio privato su Vinted e incolla qui il link.
@@ -157,6 +157,10 @@
 <button id="chat-toggle" class="chat-fab">
     💬
 </button>
+
+<script>
+    window.highlightVinted = {{ highlight_vinted|yesno:"true,false" }};
+</script>
 
 <script>
     const mainImage = document.getElementById("main-image");
@@ -227,5 +231,20 @@
         drawer.classList.remove("open");
 
     });
+
+    const vintedCard = document.getElementById("vinted-form-card");
+
+    if (window.highlightVinted && vintedCard) {
+
+        vintedCard.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        setTimeout(() => {
+            vintedCard.classList.add("highlight-card");
+        }, 600);
+
+    }
 </script>
 {% endblock %}

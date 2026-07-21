@@ -25,7 +25,10 @@ def dashboard_view(request):
     if request.user.is_staff:
         return redirect("staff_proposal_list")
     
-    proposals = proposals.order_by("created_at")
+    proposals = proposals.order_by(
+        "offer_seen_by_user",
+        "-updated_at",
+    )
 
     for proposal in proposals:
         proposal.unread_messages = proposal.messages.exclude(
@@ -84,6 +87,7 @@ def proposal_create_view(request):
 @login_required
 def proposal_detail_view(request, pk):
     proposal = get_object_or_404(ItemProposal, pk=pk, user=request.user)
+    highlight_vinted = request.session.pop("highlight_vinted", False)
     proposal.messages.exclude(sender=request.user).filter(seen_by_user=False).update(seen_by_user=True)
 
     message_form = ProposalMessageForm()
@@ -164,6 +168,7 @@ def proposal_detail_view(request, pk):
             )
 
             messages.success(request, "Offerta accettata. Ora puoi inserire il link dell'annuncio.")
+            request.session["highlight_vinted"] = True
             return redirect("proposal_detail", pk=proposal.pk)
     else:
         if proposal.status == ItemProposal.Status.OFFER_SENT and proposal.admin_offer and not proposal.offer_seen_by_user:
@@ -178,6 +183,7 @@ def proposal_detail_view(request, pk):
             "message_form": message_form,
             "vinted_form": vinted_form,
             "other_proposals": other_proposals,
+            "highlight_vinted": highlight_vinted,
         },
     )
 

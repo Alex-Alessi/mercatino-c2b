@@ -1082,6 +1082,27 @@ select {
     visibility:visible;
 }
 
+@keyframes highlightCard {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 25px rgba(0,0,0,.18);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+}
+
+.highlight-card{
+    animation: highlightCard .8s ease;
+}
+
 @media (max-width: 700px) {
     .image-lightbox img {
         max-width: 92vw;
