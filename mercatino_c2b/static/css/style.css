@@ -1103,6 +1103,104 @@ select {
     animation: highlightCard .8s ease;
 }
 
+.proposal-progress {
+    margin: 1rem 0;
+}
+
+.progress-bar {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    gap: 0;
+}
+
+.step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    text-align: center;
+}
+
+.circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 2px solid #d9dce3;
+    color: #b0b4bd;
+    font-weight: 600;
+    font-size: 15px;
+    z-index: 2;
+    transition: all .3s ease;
+}
+
+.label {
+    margin-top: .75rem;
+    font-size: .85rem;
+    font-weight: 600;
+    color: #b0b4bd;
+    white-space: nowrap;
+}
+
+/* linea tra gli step */
+
+.step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 18px;
+    left: calc(50% + 18px);
+    width: calc(100% - 36px);
+    height: 3px;
+    background: #d9dce3;
+    z-index: 1;
+}
+
+/* STEP COMPLETATI */
+
+.step.completed .circle {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: white;
+}
+
+.step.completed .label {
+    color: #22c55e;
+}
+
+.step.completed:not(:last-child)::after {
+    background: #22c55e;
+}
+
+/* STEP ATTUALE */
+
+.step.current .circle {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: white;
+}
+
+.step.current .label {
+    color: #22c55e;
+}
+
+.step.current::before {
+    content: "▼";
+    position: absolute;
+    top: -18px;
+    color: #22c55e;
+    font-size: .8rem;
+}
+
+.step.current:not(:last-child)::after {
+    background: #22c55e;
+}
+
 @media (max-width: 700px) {
     .image-lightbox img {
         max-width: 92vw;

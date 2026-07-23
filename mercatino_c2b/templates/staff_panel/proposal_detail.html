@@ -88,22 +88,23 @@
                     <span class="info-label">Nome</span>
 
                     <div class="info-value" style="display:flex">
-                        {% if proposal.user.first_name or proposal.user.last_name %}
+                        <div class="seller-info" style="margin: 0px 0">
                             <strong>
-                                {{ proposal.user.first_name }} {{ proposal.user.last_name }}
+                                {% if proposal.user.first_name or proposal.user.last_name %}
+                                    {{ proposal.user.first_name }} {{ proposal.user.last_name }}
+                                {% else %}
+                                    {{ proposal.user.username }}
+                                {% endif %}
                             </strong>
-                        {% else %}
-                            <strong>{{ proposal.user.username }}</strong>
-                        {% endif %}
 
-                        <span class="seller-badge">
-                            {{ proposal.user.profile.seller_badge }}
-                        </span>
+                            <span class="seller-badge">
+                                {{ proposal.user.profile.seller_badge }}
 
-                        <small class="seller-stats">
-                            {{ proposal.user.profile.completed_sales }}
-                            trattativ{{ proposal.user.profile.completed_sales|pluralize:"a,e" }} concluse
-                        </small>
+                                <span class="seller-tooltip">
+                                    {{ proposal.user.profile.completed_sales }} trattative concluse
+                                </span>
+                            </span>
+                        </div>
                     </div>
                 </div>
 

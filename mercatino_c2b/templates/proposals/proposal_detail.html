@@ -40,9 +40,94 @@
 
             <h1>{{ proposal.title }}</h1>
 
-            <span class="badge {{ proposal.status_badge_class }}">
-                {{ proposal.get_status_display }}
-            </span>
+            <div class="proposal-progress">
+                <div class="progress-bar">
+
+                    <div class="step completed">
+                        <div class="circle">
+                            &#10003;
+                        </div>
+
+                        <div class="label">
+                            Inviata
+                        </div>
+                    </div>
+
+                    <div class="step
+                        {% if proposal.progress_step > 2 %}
+                            completed
+                        {% elif proposal.progress_step == 2 %}
+                            current
+                        {% endif %}
+                    ">
+                        <div class="circle">
+                            {% if proposal.progress_step > 2 %}
+                                &#10003;
+                            {% else %}
+                                2
+                            {% endif %}
+                        </div>
+
+                        <div class="label">
+                            Valutazione
+                        </div>
+                    </div>
+
+                    <div class="step
+                        {% if proposal.progress_step > 3 %}
+                            completed
+                        {% elif proposal.progress_step == 3 %}
+                            current
+                        {% endif %}
+                    ">
+                        <div class="circle">
+                            {% if proposal.progress_step > 3 %}
+                                &#10003;
+                            {% else %}
+                                3
+                            {% endif %}
+                        </div>
+
+                        <div class="label">
+                            Offerta
+                        </div>
+                    </div>
+
+                    <div class="step
+                        {% if proposal.progress_step > 4 %}
+                            completed
+                        {% elif proposal.progress_step == 4 %}
+                            current
+                        {% endif %}
+                    ">
+                        <div class="circle">
+                            {% if proposal.progress_step > 4 %}
+                                &#10003;
+                            {% else %}
+                                4
+                            {% endif %}
+                        </div>
+
+                        <div class="label">
+                            Link Vinted
+                        </div>
+                    </div>
+
+                    <div class="step {% if proposal.progress_step == 5 %} completed {% endif %}">
+                        <div class="circle">
+                            {% if proposal.progress_step == 5 %}
+                                &#10003;
+                            {% else %}
+                                5
+                            {% endif %}
+                        </div>
+
+                        <div class="label">
+                            Completata
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {% if proposal.requested_price %}
                 <div class="price-box">

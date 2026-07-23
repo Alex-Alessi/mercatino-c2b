@@ -80,12 +80,13 @@
                 <p>Offerta ricevuta: € {{ proposal.admin_offer }}</p>
             {% endif %}
 
-            <a class="button secondary" href="{% url 'proposal_detail' proposal.pk %}">
-                Vedi dettagli
-            </a>
             {% if proposal.admin_offer and proposal.status == "offer_sent" and not proposal.offer_seen_by_user %}
                 <p><strong>Hai ricevuto un'offerta. Apri i dettagli per rispondere.</strong></p>
             {% endif %}
+
+            <a class="button secondary" href="{% url 'proposal_detail' proposal.pk %}" style="margin-top:auto">
+                Vedi dettagli
+            </a>
         </div>
     {% empty %}
         <div class="card">

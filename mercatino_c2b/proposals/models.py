@@ -61,6 +61,20 @@ class ItemProposal(models.Model):
         }
 
         return classes.get(self.status, "badge-gray")
+    
+    @property
+    def progress_step(self):
+        steps = {
+            self.Status.UNDER_REVIEW: 2,
+            self.Status.NEGOTIATION: 2,
+            self.Status.OFFER_SENT: 3,
+            self.Status.OFFER_ACCEPTED: 3,
+            self.Status.VINTED_LINK_SENT: 4,
+            self.Status.COMPLETED: 5,
+            self.Status.REJECTED: 2,
+        }
+
+        return steps.get(self.status, 1)
 
     def can_be_deleted(self):
         return(
