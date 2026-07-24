@@ -40,7 +40,7 @@
 
             <h1>{{ proposal.title }}</h1>
 
-            <div class="proposal-progress">
+            <div class="proposal-progress {% if proposal.status == 'rejected' %} rejected {% endif %}">
                 <div class="progress-bar">
 
                     <div class="step completed">
@@ -61,7 +61,9 @@
                         {% endif %}
                     ">
                         <div class="circle">
-                            {% if proposal.progress_step > 2 %}
+                            {% if proposal.status == "rejected" %}
+                                ✕
+                            {% elif proposal.progress_step > 2 %}
                                 &#10003;
                             {% else %}
                                 2
